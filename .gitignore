@@ -1,0 +1,25 @@
+# MacOS
+.DS_Store
+
+# Node
+node_modules
+yarn.lock
+
+# hardhat
+artifacts
+cache_hardhat
+.openzeppelin
+deployments
+scripts/deployment-*
+scripts/metadata-*
+
+# Foundry
+cache
+out
+broadcast
+
+# Artifacts
+bindings
+
+# Secrets
+.env

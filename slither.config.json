@@ -1,0 +1,4 @@
+{
+  "filter_paths": "lib,test",
+  "detectors_to_exclude": "pragma,solc-version,naming-convention,low-level-calls,assembly,timestamp,reentrancy-events"
+}

@@ -1,0 +1,8 @@
+@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
+@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/
+permit2/=lib/permit2/src/
+forge-std/=lib/forge-std/src/
+prb-proxy/=lib/prb-proxy/src/
+layerzerolabs/=lib/layerzerolabs/contracts/
+@gearbox-protocol/core-v3/contracts/=lib/core-v3/contracts/
+@gearbox-protocol/core-v2/contracts/=lib/core-v2/contracts/

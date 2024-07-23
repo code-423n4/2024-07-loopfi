@@ -1,0 +1,35 @@
+[profile.default]
+# Compilation
+solc_version = "0.8.19"
+optimizer = true
+optimizer_runs = 100
+# via_ir = true
+
+# Testing
+gas_reports = ["*"]
+verbosity = 3
+sender = '0xf000000000000000000000000000000000000000'
+tx_origin = '0xf000000000000000000000000000000000000000'
+chain_id = 99
+block_timestamp = 2592000 # as to be greater than epochFixTimeout
+libs = ["node_modules", "lib"]
+
+[profile.ci.fuzz]
+runs = 5000
+
+[profile.default.fuzz]
+runs = 100
+
+[profile.default.invariant]
+runs           = 100    # The number of calls to make in the invariant tests
+depth          = 100    # The number of times to run the invariant tests
+call_override  = false  # Override calls
+fail_on_revert = true   # Fail the test if the contract reverts
+
+[profile.default.fmt]
+int_types = "preserve"
+number_underscore = "preserve"
+
+[profile.default.rpc_endpoints]
+mainnet = "${MAINNET_RPC_URL}"
+tenderly = "${TENDERLY_FORK_URL}"
