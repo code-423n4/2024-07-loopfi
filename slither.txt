@@ -1,0 +1,560 @@
+INFO:Detectors:
+Flashlender.flashLoan(IERC3156FlashBorrower,address,uint256,bytes) (src/Flashlender.sol#87-109) uses arbitrary from in transferFrom: underlyingToken.transferFrom(address(receiver),address(pool),total) (src/Flashlender.sol#105)
+Flashlender.creditFlashLoan(ICreditFlashBorrower,uint256,bytes) (src/Flashlender.sol#117-137) uses arbitrary from in transferFrom: underlyingToken.transferFrom(address(receiver),address(pool),total) (src/Flashlender.sol#133)
+TransferAction._transferFrom(address,address,address,uint256,PermitParams) (src/proxy/TransferAction.sol#46-81) uses arbitrary from in transferFrom: IERC20(token).safeTransferFrom(from,to,amount) (src/proxy/TransferAction.sol#76)
+TransferAction._transferFrom(address,address,address,uint256,PermitParams) (src/proxy/TransferAction.sol#46-81) uses arbitrary from in transferFrom: IERC20(token).safeTransferFrom(from,to,amount) (src/proxy/TransferAction.sol#79)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#arbitrary-from-in-transferfrom 
+
+INFO:Detectors:
+BaseAction._delegateCall(address,bytes) (src/proxy/BaseAction.sol#20-24) uses delegatecall to a input-controlled function id
+	- (success,returnData) = to.delegatecall(data) (src/proxy/BaseAction.sol#21)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#controlled-delegatecall 
+
+INFO:Detectors:
+Flashlender.flashLoan(IERC3156FlashBorrower,address,uint256,bytes) (src/Flashlender.sol#87-109) ignores return value by underlyingToken.transferFrom(address(receiver),address(pool),total) (src/Flashlender.sol#105)
+Flashlender.creditFlashLoan(ICreditFlashBorrower,uint256,bytes) (src/Flashlender.sol#117-137) ignores return value by underlyingToken.transferFrom(address(receiver),address(pool),total) (src/Flashlender.sol#133)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unchecked-transfer 
+
+INFO:Detectors:
+ChefIncentivesController._newRewards(ChefIncentivesController.VaultInfo,uint256) (src/reward/ChefIncentivesController.sol#982-998) performs a multiplication on the result of a division:
+	- newReward = (rawReward * pool.allocPoint) / _totalAllocPoint (src/reward/ChefIncentivesController.sol#995)
+	- newAccRewardPerShare = (newReward * ACC_REWARD_PRECISION) / lpSupply (src/reward/ChefIncentivesController.sol#996)
+MultiFeeDistribution.withdraw(uint256) (src/reward/MultiFeeDistribution.sol#537-611) performs a multiplication on the result of a division:
+	- requiredAmount = (remaining * WHOLE) / (WHOLE - penaltyFactor) (src/reward/MultiFeeDistribution.sol#568)
+	- newPenaltyAmount = (requiredAmount * penaltyFactor) / WHOLE (src/reward/MultiFeeDistribution.sol#572)
+MultiFeeDistribution.withdraw(uint256) (src/reward/MultiFeeDistribution.sol#537-611) performs a multiplication on the result of a division:
+	- newPenaltyAmount = (requiredAmount * penaltyFactor) / WHOLE (src/reward/MultiFeeDistribution.sol#572)
+	- newBurnAmount = (newPenaltyAmount * burn) / WHOLE (src/reward/MultiFeeDistribution.sol#573)
+MultiFeeDistribution._stake(uint256,address,uint256,bool) (src/reward/MultiFeeDistribution.sol#1080-1154) performs a multiplication on the result of a division:
+	- lockDurationWeeks = _lockPeriod[typeIndex] / AGGREGATION_EPOCH (src/reward/MultiFeeDistribution.sol#1102)
+	- unlockTime = block.timestamp + (lockDurationWeeks * AGGREGATION_EPOCH) (src/reward/MultiFeeDistribution.sol#1103)
+MultiFeeDistribution._penaltyInfo(LockedBalance) (src/reward/MultiFeeDistribution.sol#1458-1468) performs a multiplication on the result of a division:
+	- penaltyAmount = (earning.amount * penaltyFactor) / WHOLE (src/reward/MultiFeeDistribution.sol#1464)
+	- burnAmount = (penaltyAmount * burn) / WHOLE (src/reward/MultiFeeDistribution.sol#1465)
+AuraVault._previewReward(uint256,uint256,AuraVault.VaultConfig) (src/vendor/AuraVault.sol#325-333) performs a multiplication on the result of a division:
+	- amount = (balReward * _chainlinkSpot()) / IOracle(feed).spot(asset()) (src/vendor/AuraVault.sol#330)
+	- amount = (amount * (INCENTIVE_BASIS - config.claimerIncentive)) / INCENTIVE_BASIS (src/vendor/AuraVault.sol#332)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#divide-before-multiply 
+
+INFO:Detectors:
+CDPVault.liquidatePosition(address,uint256) (src/CDPVault.sol#509-574) uses a dangerous strict equality:
+	- deltaDebt == maxRepayment (src/CDPVault.sol#545)
+CDPVault.modifyCollateralAndDebt(address,address,address,int256,int256) (src/CDPVault.sol#367-460) uses a dangerous strict equality:
+	- amount == maxRepayment (src/CDPVault.sol#413)
+PoolV3._calcBaseInterestAccrued() (src/PoolV3.sol#626-630) uses a dangerous strict equality:
+	- block.timestamp == timestampLU (src/PoolV3.sol#628)
+PoolV3._calcQuotaRevenueAccrued() (src/PoolV3.sol#717-721) uses a dangerous strict equality:
+	- block.timestamp == timestampLU (src/PoolV3.sol#719)
+PoolV3.baseInterestIndex() (src/PoolV3.sol#614-618) uses a dangerous strict equality:
+	- block.timestamp == timestampLU (src/PoolV3.sol#616)
+PoolV3.supplyRate() (src/PoolV3.sol#603-611) uses a dangerous strict equality:
+	- assets == 0 (src/PoolV3.sol#606)
+MultiFeeDistribution._stake(uint256,address,uint256,bool) (src/reward/MultiFeeDistribution.sol#1080-1154) uses a dangerous strict equality:
+	- (indexToAggregate < userLocksLength) && (userLocks[indexToAggregate].unlockTime / AGGREGATION_EPOCH == unlockTime / AGGREGATION_EPOCH) && (userLocks[indexToAggregate].multiplier == rewardMultiplier) (src/reward/MultiFeeDistribution.sol#1108-1110)
+MultiFeeDistribution.claimBounty(address,bool) (src/reward/MultiFeeDistribution.sol#843-858) uses a dangerous strict equality:
+	- unlockable == 0 (src/reward/MultiFeeDistribution.sol#847)
+MultiFeeDistribution.vestTokens(address,uint256,bool) (src/reward/MultiFeeDistribution.sol#496-529) uses a dangerous strict equality:
+	- earnings.length > 0 && (earnings[lastIndex].unlockTime / 86400) == currentDay + vestingDurationDays (src/reward/MultiFeeDistribution.sol#517)
+MultiFeeDistribution.withdraw(uint256) (src/reward/MultiFeeDistribution.sol#537-611) uses a dangerous strict equality:
+	- remaining == 0 (src/reward/MultiFeeDistribution.sol#566)
+MultiFeeDistribution.withdraw(uint256) (src/reward/MultiFeeDistribution.sol#537-611) uses a dangerous strict equality:
+	- remaining == 0 (src/reward/MultiFeeDistribution.sol#580)
+MultiFeeDistribution.withdraw(uint256) (src/reward/MultiFeeDistribution.sol#537-611) uses a dangerous strict equality:
+	- sumEarned == 0 (src/reward/MultiFeeDistribution.sol#583)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-strict-equalities 
+
+INFO:Detectors:
+Reentrancy in GaugeV3._unvote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#187-210):
+	External calls:
+	- _checkAndUpdateEpoch() (src/quotas/GaugeV3.sol#190)
+		- _poolQuotaKeeper().updateRates() (src/quotas/GaugeV3.sol#86)
+	State variables written after the call(s):
+	- qp.totalVotesLpSide -= votes (src/quotas/GaugeV3.sol#198)
+	GaugeV3.quotaRateParams (src/quotas/GaugeV3.sol#35) can be used in cross function reentrancies:
+	- GaugeV3._changeQuotaTokenRateParams(address,uint16,uint16) (src/quotas/GaugeV3.sol#291-302)
+	- GaugeV3._unvote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#187-210)
+	- GaugeV3._vote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#144-161)
+	- GaugeV3.addQuotaToken(address,uint16,uint16) (src/quotas/GaugeV3.sol#232-260)
+	- GaugeV3.changeQuotaMaxRate(address,uint16) (src/quotas/GaugeV3.sol#278-288)
+	- GaugeV3.changeQuotaMinRate(address,uint16) (src/quotas/GaugeV3.sol#264-274)
+	- GaugeV3.getRates(address[]) (src/quotas/GaugeV3.sol#97-118)
+	- GaugeV3.isTokenAdded(address) (src/quotas/GaugeV3.sol#312-314)
+	- GaugeV3.quotaRateParams (src/quotas/GaugeV3.sol#35)
+	- qp.totalVotesCaSide -= votes (src/quotas/GaugeV3.sol#204)
+	GaugeV3.quotaRateParams (src/quotas/GaugeV3.sol#35) can be used in cross function reentrancies:
+	- GaugeV3._changeQuotaTokenRateParams(address,uint16,uint16) (src/quotas/GaugeV3.sol#291-302)
+	- GaugeV3._unvote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#187-210)
+	- GaugeV3._vote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#144-161)
+	- GaugeV3.addQuotaToken(address,uint16,uint16) (src/quotas/GaugeV3.sol#232-260)
+	- GaugeV3.changeQuotaMaxRate(address,uint16) (src/quotas/GaugeV3.sol#278-288)
+	- GaugeV3.changeQuotaMinRate(address,uint16) (src/quotas/GaugeV3.sol#264-274)
+	- GaugeV3.getRates(address[]) (src/quotas/GaugeV3.sol#97-118)
+	- GaugeV3.isTokenAdded(address) (src/quotas/GaugeV3.sol#312-314)
+	- GaugeV3.quotaRateParams (src/quotas/GaugeV3.sol#35)
+Reentrancy in GaugeV3._vote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#144-161):
+	External calls:
+	- _checkAndUpdateEpoch() (src/quotas/GaugeV3.sol#147)
+		- _poolQuotaKeeper().updateRates() (src/quotas/GaugeV3.sol#86)
+	State variables written after the call(s):
+	- qp.totalVotesLpSide += votes (src/quotas/GaugeV3.sol#153)
+	GaugeV3.quotaRateParams (src/quotas/GaugeV3.sol#35) can be used in cross function reentrancies:
+	- GaugeV3._changeQuotaTokenRateParams(address,uint16,uint16) (src/quotas/GaugeV3.sol#291-302)
+	- GaugeV3._unvote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#187-210)
+	- GaugeV3._vote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#144-161)
+	- GaugeV3.addQuotaToken(address,uint16,uint16) (src/quotas/GaugeV3.sol#232-260)
+	- GaugeV3.changeQuotaMaxRate(address,uint16) (src/quotas/GaugeV3.sol#278-288)
+	- GaugeV3.changeQuotaMinRate(address,uint16) (src/quotas/GaugeV3.sol#264-274)
+	- GaugeV3.getRates(address[]) (src/quotas/GaugeV3.sol#97-118)
+	- GaugeV3.isTokenAdded(address) (src/quotas/GaugeV3.sol#312-314)
+	- GaugeV3.quotaRateParams (src/quotas/GaugeV3.sol#35)
+	- qp.totalVotesCaSide += votes (src/quotas/GaugeV3.sol#156)
+	GaugeV3.quotaRateParams (src/quotas/GaugeV3.sol#35) can be used in cross function reentrancies:
+	- GaugeV3._changeQuotaTokenRateParams(address,uint16,uint16) (src/quotas/GaugeV3.sol#291-302)
+	- GaugeV3._unvote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#187-210)
+	- GaugeV3._vote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#144-161)
+	- GaugeV3.addQuotaToken(address,uint16,uint16) (src/quotas/GaugeV3.sol#232-260)
+	- GaugeV3.changeQuotaMaxRate(address,uint16) (src/quotas/GaugeV3.sol#278-288)
+	- GaugeV3.changeQuotaMinRate(address,uint16) (src/quotas/GaugeV3.sol#264-274)
+	- GaugeV3.getRates(address[]) (src/quotas/GaugeV3.sol#97-118)
+	- GaugeV3.isTokenAdded(address) (src/quotas/GaugeV3.sol#312-314)
+	- GaugeV3.quotaRateParams (src/quotas/GaugeV3.sol#35)
+Reentrancy in ChefIncentivesController.claim(address,address[]) (src/reward/ChefIncentivesController.sol#518-550):
+	External calls:
+	- checkAndProcessEligibility(_user,true,true) (src/reward/ChefIncentivesController.sol#521)
+		- isEligible = eligibleDataProvider.refresh(_user) (src/reward/ChefIncentivesController.sol#768)
+		- eligibleDataProvider.setDqTime(_user,block.timestamp) (src/reward/ChefIncentivesController.sol#806)
+	State variables written after the call(s):
+	- _updateEmissions() (src/reward/ChefIncentivesController.sol#524)
+		- accountedRewards = accountedRewards + reward (src/reward/ChefIncentivesController.sol#480)
+	ChefIncentivesController.accountedRewards (src/reward/ChefIncentivesController.sol#188) can be used in cross function reentrancies:
+	- ChefIncentivesController._updatePool(ChefIncentivesController.VaultInfo,uint256) (src/reward/ChefIncentivesController.sol#469-483)
+	- ChefIncentivesController.accountedRewards (src/reward/ChefIncentivesController.sol#188)
+	- ChefIncentivesController.availableRewards() (src/reward/ChefIncentivesController.sol#934-936)
+	- _updatePool(pool,_totalAllocPoint) (src/reward/ChefIncentivesController.sol#536)
+		- accountedRewards = accountedRewards + reward (src/reward/ChefIncentivesController.sol#480)
+	ChefIncentivesController.accountedRewards (src/reward/ChefIncentivesController.sol#188) can be used in cross function reentrancies:
+	- ChefIncentivesController._updatePool(ChefIncentivesController.VaultInfo,uint256) (src/reward/ChefIncentivesController.sol#469-483)
+	- ChefIncentivesController.accountedRewards (src/reward/ChefIncentivesController.sol#188)
+	- ChefIncentivesController.availableRewards() (src/reward/ChefIncentivesController.sol#934-936)
+	- _updateEmissions() (src/reward/ChefIncentivesController.sol#524)
+		- endingTime.lastUpdatedTime = block.timestamp (src/reward/ChefIncentivesController.sol#892)
+		- endingTime.estimatedTime = type()(uint256).max (src/reward/ChefIncentivesController.sol#895)
+		- endingTime.estimatedTime = newEndTime (src/reward/ChefIncentivesController.sol#899)
+	ChefIncentivesController.endingTime (src/reward/ChefIncentivesController.sol#203) can be used in cross function reentrancies:
+	- ChefIncentivesController.endRewardTime() (src/reward/ChefIncentivesController.sol#872-902)
+	- ChefIncentivesController.endingTime (src/reward/ChefIncentivesController.sol#203)
+	- ChefIncentivesController.initialize(address,IEligibilityDataProvider,IMultiFeeDistribution,uint256,address,uint256) (src/reward/ChefIncentivesController.sol#234-259)
+	- ChefIncentivesController.setEndingTimeUpdateCadence(uint256) (src/reward/ChefIncentivesController.sol#909-913)
+	- _updatePool(pool,_totalAllocPoint) (src/reward/ChefIncentivesController.sol#536)
+		- endingTime.lastUpdatedTime = block.timestamp (src/reward/ChefIncentivesController.sol#892)
+		- endingTime.estimatedTime = type()(uint256).max (src/reward/ChefIncentivesController.sol#895)
+		- endingTime.estimatedTime = newEndTime (src/reward/ChefIncentivesController.sol#899)
+	ChefIncentivesController.endingTime (src/reward/ChefIncentivesController.sol#203) can be used in cross function reentrancies:
+	- ChefIncentivesController.endRewardTime() (src/reward/ChefIncentivesController.sol#872-902)
+	- ChefIncentivesController.endingTime (src/reward/ChefIncentivesController.sol#203)
+	- ChefIncentivesController.initialize(address,IEligibilityDataProvider,IMultiFeeDistribution,uint256,address,uint256) (src/reward/ChefIncentivesController.sol#234-259)
+	- ChefIncentivesController.setEndingTimeUpdateCadence(uint256) (src/reward/ChefIncentivesController.sol#909-913)
+	- _updateEmissions() (src/reward/ChefIncentivesController.sol#524)
+		- lastAllPoolUpdate = block.timestamp (src/reward/ChefIncentivesController.sol#461)
+	ChefIncentivesController.lastAllPoolUpdate (src/reward/ChefIncentivesController.sol#191) can be used in cross function reentrancies:
+	- ChefIncentivesController._massUpdatePools() (src/reward/ChefIncentivesController.sol#452-462)
+	- ChefIncentivesController.endRewardTime() (src/reward/ChefIncentivesController.sol#872-902)
+	- ChefIncentivesController.lastAllPoolUpdate (src/reward/ChefIncentivesController.sol#191)
+	- _updateEmissions() (src/reward/ChefIncentivesController.sol#524)
+		- rewardsPerSecond = 0 (src/reward/ChefIncentivesController.sol#443)
+		- rewardsPerSecond = uint256(emissionSchedule[i - 1].rewardsPerSecond) (src/reward/ChefIncentivesController.sol#365)
+	ChefIncentivesController.rewardsPerSecond (src/reward/ChefIncentivesController.sol#150) can be used in cross function reentrancies:
+	- ChefIncentivesController._newRewards(ChefIncentivesController.VaultInfo,uint256) (src/reward/ChefIncentivesController.sol#982-998)
+	- ChefIncentivesController._updateEmissions() (src/reward/ChefIncentivesController.sol#439-447)
+	- ChefIncentivesController.endRewardTime() (src/reward/ChefIncentivesController.sol#872-902)
+	- ChefIncentivesController.initialize(address,IEligibilityDataProvider,IMultiFeeDistribution,uint256,address,uint256) (src/reward/ChefIncentivesController.sol#234-259)
+	- ChefIncentivesController.registerRewardDeposit(uint256) (src/reward/ChefIncentivesController.sol#920-927)
+	- ChefIncentivesController.rewardsPerSecond (src/reward/ChefIncentivesController.sol#150)
+	- ChefIncentivesController.setRewardsPerSecond(uint256,bool) (src/reward/ChefIncentivesController.sol#342-347)
+	- ChefIncentivesController.setScheduledRewardsPerSecond() (src/reward/ChefIncentivesController.sol#352-368)
+	- userBaseClaimable[_user] = 0 (src/reward/ChefIncentivesController.sol#529)
+	ChefIncentivesController.userBaseClaimable (src/reward/ChefIncentivesController.sol#170) can be used in cross function reentrancies:
+	- ChefIncentivesController._handleActionAfterForToken(address,address,uint256,uint256) (src/reward/ChefIncentivesController.sol#627-654)
+	- ChefIncentivesController.allPendingRewards(address) (src/reward/ChefIncentivesController.sol#951-961)
+	- ChefIncentivesController.claim(address,address[]) (src/reward/ChefIncentivesController.sol#518-550)
+	- ChefIncentivesController.manualStopEmissionsFor(address,address[]) (src/reward/ChefIncentivesController.sol#813-842)
+	- ChefIncentivesController.userBaseClaimable (src/reward/ChefIncentivesController.sol#170)
+	- user.rewardDebt = rewardDebt (src/reward/ChefIncentivesController.sol#540)
+	ChefIncentivesController.userInfo (src/reward/ChefIncentivesController.sol#167) can be used in cross function reentrancies:
+	- ChefIncentivesController._handleActionAfterForToken(address,address,uint256,uint256) (src/reward/ChefIncentivesController.sol#627-654)
+	- ChefIncentivesController._updateRegisteredBalance(address) (src/reward/ChefIncentivesController.sol#690-707)
+	- ChefIncentivesController.claim(address,address[]) (src/reward/ChefIncentivesController.sol#518-550)
+	- ChefIncentivesController.hasEligibleDeposits(address) (src/reward/ChefIncentivesController.sol#715-726)
+	- ChefIncentivesController.manualStopEmissionsFor(address,address[]) (src/reward/ChefIncentivesController.sol#813-842)
+	- ChefIncentivesController.pendingRewards(address,address[]) (src/reward/ChefIncentivesController.sol#493-511)
+	- ChefIncentivesController.stopEmissionsFor(address) (src/reward/ChefIncentivesController.sol#790-807)
+	- ChefIncentivesController.userInfo (src/reward/ChefIncentivesController.sol#167)
+	- user.lastClaimTime = currentTimestamp (src/reward/ChefIncentivesController.sol#541)
+	ChefIncentivesController.userInfo (src/reward/ChefIncentivesController.sol#167) can be used in cross function reentrancies:
+	- ChefIncentivesController._handleActionAfterForToken(address,address,uint256,uint256) (src/reward/ChefIncentivesController.sol#627-654)
+	- ChefIncentivesController._updateRegisteredBalance(address) (src/reward/ChefIncentivesController.sol#690-707)
+	- ChefIncentivesController.claim(address,address[]) (src/reward/ChefIncentivesController.sol#518-550)
+	- ChefIncentivesController.hasEligibleDeposits(address) (src/reward/ChefIncentivesController.sol#715-726)
+	- ChefIncentivesController.manualStopEmissionsFor(address,address[]) (src/reward/ChefIncentivesController.sol#813-842)
+	- ChefIncentivesController.pendingRewards(address,address[]) (src/reward/ChefIncentivesController.sol#493-511)
+	- ChefIncentivesController.stopEmissionsFor(address) (src/reward/ChefIncentivesController.sol#790-807)
+	- ChefIncentivesController.userInfo (src/reward/ChefIncentivesController.sol#167)
+Reentrancy in CDPVault.liquidatePosition(address,uint256) (src/CDPVault.sol#509-574):
+	External calls:
+	- poolUnderlying.safeTransferFrom(msg.sender,address(pool),repayAmount - penalty) (src/CDPVault.sol#539)
+	- position = _modifyPosition(owner,position,newDebt,newCumulativeIndex,- toInt256(takeCollateral),totalDebt) (src/CDPVault.sol#561)
+		- rewardController.handleActionAfter(owner,position.debt,totalDebt_) (src/CDPVault.sol#336)
+	State variables written after the call(s):
+	- position = _modifyPosition(owner,position,newDebt,newCumulativeIndex,- toInt256(takeCollateral),totalDebt) (src/CDPVault.sol#561)
+		- positions[owner] = position (src/CDPVault.sol#325)
+	CDPVault.positions (src/CDPVault.sol#106) can be used in cross function reentrancies:
+	- CDPVault._modifyPosition(address,CDPVault.Position,uint256,uint256,int256,uint256) (src/CDPVault.sol#305-342)
+	- CDPVault.getDebtData(address) (src/CDPVault.sol#751-753)
+	- CDPVault.getDebtInfo(address) (src/CDPVault.sol#756-761)
+	- CDPVault.liquidatePosition(address,uint256) (src/CDPVault.sol#509-574)
+	- CDPVault.liquidatePositionBadDebt(address,uint256) (src/CDPVault.sol#579-632)
+	- CDPVault.modifyCollateralAndDebt(address,address,address,int256,int256) (src/CDPVault.sol#367-460)
+	- CDPVault.positions (src/CDPVault.sol#106)
+	- CDPVault.quotasInterest(address) (src/CDPVault.sol#745-748)
+	- CDPVault.virtualDebt(address) (src/CDPVault.sol#729-731)
+Reentrancy in CDPVault.liquidatePositionBadDebt(address,uint256) (src/CDPVault.sol#579-632):
+	External calls:
+	- poolUnderlying.safeTransferFrom(msg.sender,address(pool),repayAmount) (src/CDPVault.sol#610)
+	- position = _modifyPosition(owner,position,0,debtData.cumulativeIndexNow,- toInt256(takeCollateral),totalDebt) (src/CDPVault.sol#615-622)
+		- rewardController.handleActionAfter(owner,position.debt,totalDebt_) (src/CDPVault.sol#336)
+	State variables written after the call(s):
+	- position = _modifyPosition(owner,position,0,debtData.cumulativeIndexNow,- toInt256(takeCollateral),totalDebt) (src/CDPVault.sol#615-622)
+		- positions[owner] = position (src/CDPVault.sol#325)
+	CDPVault.positions (src/CDPVault.sol#106) can be used in cross function reentrancies:
+	- CDPVault._modifyPosition(address,CDPVault.Position,uint256,uint256,int256,uint256) (src/CDPVault.sol#305-342)
+	- CDPVault.getDebtData(address) (src/CDPVault.sol#751-753)
+	- CDPVault.getDebtInfo(address) (src/CDPVault.sol#756-761)
+	- CDPVault.liquidatePosition(address,uint256) (src/CDPVault.sol#509-574)
+	- CDPVault.liquidatePositionBadDebt(address,uint256) (src/CDPVault.sol#579-632)
+	- CDPVault.modifyCollateralAndDebt(address,address,address,int256,int256) (src/CDPVault.sol#367-460)
+	- CDPVault.positions (src/CDPVault.sol#106)
+	- CDPVault.quotasInterest(address) (src/CDPVault.sol#745-748)
+	- CDPVault.virtualDebt(address) (src/CDPVault.sol#729-731)
+Reentrancy in CDPVault.modifyCollateralAndDebt(address,address,address,int256,int256) (src/CDPVault.sol#367-460):
+	External calls:
+	- pool.lendCreditAccount(uint256(deltaDebt),creditor) (src/CDPVault.sol#401)
+	- poolUnderlying.safeTransferFrom(creditor,address(pool),amount) (src/CDPVault.sol#410)
+	- pool.repayCreditAccount(debtData.debt - newDebt,profit,0) (src/CDPVault.sol#428)
+	- token.safeTransferFrom(collateralizer,address(this),amount_scope_0) (src/CDPVault.sol#439)
+	- token.safeTransfer(collateralizer,amount_scope_1) (src/CDPVault.sol#442)
+	- position = _modifyPosition(owner,position,newDebt,newCumulativeIndex,deltaCollateral,totalDebt) (src/CDPVault.sol#445)
+		- rewardController.handleActionAfter(owner,position.debt,totalDebt_) (src/CDPVault.sol#336)
+	State variables written after the call(s):
+	- position = _modifyPosition(owner,position,newDebt,newCumulativeIndex,deltaCollateral,totalDebt) (src/CDPVault.sol#445)
+		- positions[owner] = position (src/CDPVault.sol#325)
+	CDPVault.positions (src/CDPVault.sol#106) can be used in cross function reentrancies:
+	- CDPVault._modifyPosition(address,CDPVault.Position,uint256,uint256,int256,uint256) (src/CDPVault.sol#305-342)
+	- CDPVault.getDebtData(address) (src/CDPVault.sol#751-753)
+	- CDPVault.getDebtInfo(address) (src/CDPVault.sol#756-761)
+	- CDPVault.liquidatePosition(address,uint256) (src/CDPVault.sol#509-574)
+	- CDPVault.liquidatePositionBadDebt(address,uint256) (src/CDPVault.sol#579-632)
+	- CDPVault.modifyCollateralAndDebt(address,address,address,int256,int256) (src/CDPVault.sol#367-460)
+	- CDPVault.positions (src/CDPVault.sol#106)
+	- CDPVault.quotasInterest(address) (src/CDPVault.sol#745-748)
+	- CDPVault.virtualDebt(address) (src/CDPVault.sol#729-731)
+Reentrancy in PoolQuotaKeeperV3.updateRates() (src/quotas/PoolQuotaKeeperV3.sol#183-221):
+	External calls:
+	- IPoolV3(pool).setQuotaRevenue(quotaRevenue) (src/quotas/PoolQuotaKeeperV3.sol#219)
+	State variables written after the call(s):
+	- lastQuotaRateUpdate = uint40(block.timestamp) (src/quotas/PoolQuotaKeeperV3.sol#220)
+	PoolQuotaKeeperV3.lastQuotaRateUpdate (src/quotas/PoolQuotaKeeperV3.sol#61) can be used in cross function reentrancies:
+	- PoolQuotaKeeperV3.cumulativeIndex(address) (src/quotas/PoolQuotaKeeperV3.sol#87-92)
+	- PoolQuotaKeeperV3.lastQuotaRateUpdate (src/quotas/PoolQuotaKeeperV3.sol#61)
+	- PoolQuotaKeeperV3.updateRates() (src/quotas/PoolQuotaKeeperV3.sol#183-221)
+Reentrancy in MultiFeeDistribution.zapVestingToLp(address) (src/reward/MultiFeeDistribution.sol#689-717):
+	External calls:
+	- rdntToken.safeTransfer(_lockZap,zapped) (src/reward/MultiFeeDistribution.sol#708)
+	State variables written after the call(s):
+	- bal.earned = bal.earned - zapped (src/reward/MultiFeeDistribution.sol#711)
+	MultiFeeDistribution._balances (src/reward/MultiFeeDistribution.sol#87) can be used in cross function reentrancies:
+	- MultiFeeDistribution._stake(uint256,address,uint256,bool) (src/reward/MultiFeeDistribution.sol#1080-1154)
+	- MultiFeeDistribution._updateReward(address) (src/reward/MultiFeeDistribution.sol#1160-1179)
+	- MultiFeeDistribution._withdrawExpiredLocksFor(address,bool,bool,uint256) (src/reward/MultiFeeDistribution.sol#1351-1381)
+	- MultiFeeDistribution._withdrawTokens(address,uint256,uint256,uint256,bool) (src/reward/MultiFeeDistribution.sol#1275-1301)
+	- MultiFeeDistribution.claimableRewards(address) (src/reward/MultiFeeDistribution.sol#1049-1068)
+	- MultiFeeDistribution.earnedBalances(address) (src/reward/MultiFeeDistribution.sol#961-988)
+	- MultiFeeDistribution.exit(bool) (src/reward/MultiFeeDistribution.sol#646-658)
+	- MultiFeeDistribution.getBalances(address) (src/reward/MultiFeeDistribution.sol#830-832)
+	- MultiFeeDistribution.individualEarlyExit(bool,uint256) (src/reward/MultiFeeDistribution.sol#618-640)
+	- MultiFeeDistribution.lockedBalances(address) (src/reward/MultiFeeDistribution.sol#900-933)
+	- MultiFeeDistribution.totalBalance(address) (src/reward/MultiFeeDistribution.sol#803-808)
+	- MultiFeeDistribution.vestTokens(address,uint256,bool) (src/reward/MultiFeeDistribution.sol#496-529)
+	- MultiFeeDistribution.withdraw(uint256) (src/reward/MultiFeeDistribution.sol#537-611)
+	- MultiFeeDistribution.withdrawableBalance(address) (src/reward/MultiFeeDistribution.sol#998-1017)
+	- MultiFeeDistribution.zapVestingToLp(address) (src/reward/MultiFeeDistribution.sol#689-717)
+	- bal.total = bal.total - zapped (src/reward/MultiFeeDistribution.sol#712)
+	MultiFeeDistribution._balances (src/reward/MultiFeeDistribution.sol#87) can be used in cross function reentrancies:
+	- MultiFeeDistribution._stake(uint256,address,uint256,bool) (src/reward/MultiFeeDistribution.sol#1080-1154)
+	- MultiFeeDistribution._updateReward(address) (src/reward/MultiFeeDistribution.sol#1160-1179)
+	- MultiFeeDistribution._withdrawExpiredLocksFor(address,bool,bool,uint256) (src/reward/MultiFeeDistribution.sol#1351-1381)
+	- MultiFeeDistribution._withdrawTokens(address,uint256,uint256,uint256,bool) (src/reward/MultiFeeDistribution.sol#1275-1301)
+	- MultiFeeDistribution.claimableRewards(address) (src/reward/MultiFeeDistribution.sol#1049-1068)
+	- MultiFeeDistribution.earnedBalances(address) (src/reward/MultiFeeDistribution.sol#961-988)
+	- MultiFeeDistribution.exit(bool) (src/reward/MultiFeeDistribution.sol#646-658)
+	- MultiFeeDistribution.getBalances(address) (src/reward/MultiFeeDistribution.sol#830-832)
+	- MultiFeeDistribution.individualEarlyExit(bool,uint256) (src/reward/MultiFeeDistribution.sol#618-640)
+	- MultiFeeDistribution.lockedBalances(address) (src/reward/MultiFeeDistribution.sol#900-933)
+	- MultiFeeDistribution.totalBalance(address) (src/reward/MultiFeeDistribution.sol#803-808)
+	- MultiFeeDistribution.vestTokens(address,uint256,bool) (src/reward/MultiFeeDistribution.sol#496-529)
+	- MultiFeeDistribution.withdraw(uint256) (src/reward/MultiFeeDistribution.sol#537-611)
+	- MultiFeeDistribution.withdrawableBalance(address) (src/reward/MultiFeeDistribution.sol#998-1017)
+	- MultiFeeDistribution.zapVestingToLp(address) (src/reward/MultiFeeDistribution.sol#689-717)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-1 
+
+INFO:Detectors:
+SwapAction.balancerSwap(SwapType,address,bytes32[],address[],uint256,uint256,address,uint256).outIncrement (src/proxy/SwapAction.sol#213) is a local variable never initialized
+SwapAction.balancerSwap(SwapType,address,bytes32[],address[],uint256,uint256,address,uint256).userData (src/proxy/SwapAction.sol#211) is a local variable never initialized
+MultiFeeDistribution.earnedBalances(address).idx (src/reward/MultiFeeDistribution.sol#966) is a local variable never initialized
+MultiFeeDistribution.withdraw(uint256).penaltyAmount (src/reward/MultiFeeDistribution.sol#541) is a local variable never initialized
+MultiFeeDistribution.removeReward(address).indexToRemove (src/reward/MultiFeeDistribution.sol#369) is a local variable never initialized
+AuraVault._chainlinkSpot().isValid (src/vendor/AuraVault.sol#366) is a local variable never initialized
+CDPVault.modifyCollateralAndDebt(address,address,address,int256,int256).quotaRevenueChange (src/CDPVault.sol#390) is a local variable never initialized
+BalancerOracle._getTokenPrice(uint256).token (src/oracle/BalancerOracle.sol#166) is a local variable never initialized
+PositionAction4626._onIncreaseLever(LeverParams,address,uint256,uint256).upFrontCollateral (src/proxy/PositionAction4626.sol#85) is a local variable never initialized
+MultiFeeDistribution.lockedBalances(address).idx (src/reward/MultiFeeDistribution.sol#914) is a local variable never initialized
+SwapAction.balancerSwap(SwapType,address,bytes32[],address[],uint256,uint256,address,uint256).inIncrement (src/proxy/SwapAction.sol#212) is a local variable never initialized
+MultiFeeDistribution.removeReward(address).isTokenFound (src/reward/MultiFeeDistribution.sol#368) is a local variable never initialized
+MultiFeeDistribution.withdraw(uint256).burnAmount (src/reward/MultiFeeDistribution.sol#542) is a local variable never initialized
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#uninitialized-local-variables 
+
+INFO:Detectors:
+PoolV3.setCreditManagerDebtLimit(address,uint256) (src/PoolV3.sol#797-815) ignores return value by _creditManagerSet.add(creditManager) (src/PoolV3.sol#810)
+VaultRegistry.getUserTotalDebt(address) (src/VaultRegistry.sol#65-76) ignores return value by (None,debt,None,None,None,None) = ICDPVault(vaultList[i]).positions(user) (src/VaultRegistry.sol#68)
+FlashLoanReceiverBase.approvePayback(uint256) (src/interfaces/IFlashlender.sol#113-116) ignores return value by flashlender.underlyingToken().approve(address(flashlender),amount) (src/interfaces/IFlashlender.sol#115)
+BalancerOracle.constructor(address,address,address,uint256,uint256) (src/oracle/BalancerOracle.sol#68-89) ignores return value by (tokens,None,None) = balancerVault.getPoolTokens(poolId) (src/oracle/BalancerOracle.sol#82)
+ChainlinkOracle._fetchAndValidate(address) (src/oracle/ChainlinkOracle.sol#96-110) ignores return value by (answer,updatedAt) = AggregatorV3Interface(oracle.aggregator).latestRoundData() (src/oracle/ChainlinkOracle.sol#98-109)
+PositionAction.increaseLever(LeverParams,address,uint256,address,PermitParams) (src/proxy/PositionAction.sol#296-336) ignores return value by flashlender.flashLoan(IERC3156FlashBorrower(self),address(underlyingToken),leverParams.primarySwap.amount,abi.encode(leverParams,upFrontToken,upFrontAmount)) (src/proxy/PositionAction.sol#329-334)
+PositionAction.decreaseLever(LeverParams,uint256,address) (src/proxy/PositionAction.sol#345-371) ignores return value by flashlender.creditFlashLoan(ICreditFlashBorrower(self),loanAmount,abi.encode(leverParams,subCollateral,residualRecipient)) (src/proxy/PositionAction.sol#365-369)
+PoolQuotaKeeperV3.addQuotaToken(address) (src/quotas/PoolQuotaKeeperV3.sol#161-177) ignores return value by quotaTokensSet.add(token) (src/quotas/PoolQuotaKeeperV3.sol#173)
+ChefIncentivesController._updateRegisteredBalance(address) (src/reward/ChefIncentivesController.sol#690-707) ignores return value by (None,newBal,None,None,None,None) = ICDPVault(registeredTokens[i]).positions(_user) (src/reward/ChefIncentivesController.sol#693)
+AuraVault.deposit(uint256,address) (src/vendor/AuraVault.sol#199-208) ignores return value by IPool(rewardPool).deposit(assets,address(this)) (src/vendor/AuraVault.sol#205)
+AuraVault.mint(uint256,address) (src/vendor/AuraVault.sol#216-225) ignores return value by IPool(rewardPool).deposit(assets,address(this)) (src/vendor/AuraVault.sol#222)
+AuraVault.claim(uint256[],uint256) (src/vendor/AuraVault.sol#280-310) ignores return value by IPool(rewardPool).getReward() (src/vendor/AuraVault.sol#282)
+AuraVault.claim(uint256[],uint256) (src/vendor/AuraVault.sol#280-310) ignores return value by IPool(rewardPool).deposit(amountIn,address(this)) (src/vendor/AuraVault.sol#294)
+AuraVault._chainlinkSpot() (src/vendor/AuraVault.sol#365-379) ignores return value by (answer) = AggregatorV3Interface(BAL_CHAINLINK_FEED).latestRoundData() (src/vendor/AuraVault.sol#367-376)
+AuraVault._getAuraSpot() (src/vendor/AuraVault.sol#381-391) ignores return value by (None,answer,None,None,None) = AggregatorV3Interface(ETH_CHAINLINK_FEED).latestRoundData() (src/vendor/AuraVault.sol#383)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return 
+
+INFO:Detectors:
+PositionAction4626._onIncreaseLever(LeverParams,address,uint256,uint256).underlyingToken (src/proxy/PositionAction4626.sol#95) shadows:
+	- PositionAction.underlyingToken (src/proxy/PositionAction.sol#83) (state variable)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#local-variable-shadowing 
+
+INFO:Detectors:
+ChefIncentivesController.addPool(address,uint256) (src/reward/ChefIncentivesController.sol#301-311) should emit an event for: 
+	- totalAllocPoint = totalAllocPoint + _allocPoint (src/reward/ChefIncentivesController.sol#305) 
+MultiFeeDistribution.setLookback(uint256) (src/reward/MultiFeeDistribution.sol#452-457) should emit an event for: 
+	- rewardsLookback = lookback (src/reward/MultiFeeDistribution.sol#456) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-arithmetic 
+
+INFO:Detectors:
+PoolV3.constructor(address,address,address,uint256,string,string).addressProvider_ (src/PoolV3.sol#153) lacks a zero-check on :
+		- addressProvider = addressProvider_ (src/PoolV3.sol#168)
+		- treasury = IAddressProviderV3(addressProvider_).getAddressOrRevert({key:AP_TREASURY,_version:NO_VERSION_CONTROL}) (src/PoolV3.sol#171-174)
+PoolV3.constructor(address,address,address,uint256,string,string).underlyingToken_ (src/PoolV3.sol#154) lacks a zero-check on :
+		- underlyingToken = underlyingToken_ (src/PoolV3.sol#169)
+PoolV3.constructor(address,address,address,uint256,string,string).interestRateModel_ (src/PoolV3.sol#155) lacks a zero-check on :
+		- interestRateModel = interestRateModel_ (src/PoolV3.sol#179)
+PoolV3.setInterestRateModel(address).newInterestRateModel (src/PoolV3.sol#747) lacks a zero-check on :
+		- interestRateModel = newInterestRateModel (src/PoolV3.sol#754)
+Silo.constructor(address,address)._stakingVault (src/Silo.sol#18) lacks a zero-check on :
+		- STAKING_VAULT = _stakingVault (src/Silo.sol#19)
+BalancerOracle.constructor(address,address,address,uint256,uint256).pool_ (src/oracle/BalancerOracle.sol#71) lacks a zero-check on :
+		- pool = pool_ (src/oracle/BalancerOracle.sol#79)
+GaugeV3.constructor(address,address)._pool (src/quotas/GaugeV3.sol#53) lacks a zero-check on :
+		- pool = _pool (src/quotas/GaugeV3.sol#59)
+GaugeV3.constructor(address,address)._voter (src/quotas/GaugeV3.sol#54) lacks a zero-check on :
+		- voter = _voter (src/quotas/GaugeV3.sol#60)
+PoolQuotaKeeperV3.constructor(address)._pool (src/quotas/PoolQuotaKeeperV3.sol#80) lacks a zero-check on :
+		- pool = _pool (src/quotas/PoolQuotaKeeperV3.sol#82)
+		- underlying = IPoolV3(_pool).asset() (src/quotas/PoolQuotaKeeperV3.sol#83)
+ChefIncentivesController.setBountyManager(address)._bountyManager (src/reward/ChefIncentivesController.sol#272) lacks a zero-check on :
+		- bountyManager = _bountyManager (src/reward/ChefIncentivesController.sol#273)
+AuraVault.constructor(address,address,address,address,uint32,uint32,string,string).rewardPool_ (src/vendor/AuraVault.sol#121) lacks a zero-check on :
+		- rewardPool = rewardPool_ (src/vendor/AuraVault.sol#130)
+AuraVault.constructor(address,address,address,address,uint32,uint32,string,string).feed_ (src/vendor/AuraVault.sol#123) lacks a zero-check on :
+		- feed = feed_ (src/vendor/AuraVault.sol#131)
+AuraVault.constructor(address,address,address,address,uint32,uint32,string,string).auraPriceOracle_ (src/vendor/AuraVault.sol#124) lacks a zero-check on :
+		- auraPriceOracle = auraPriceOracle_ (src/vendor/AuraVault.sol#132)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation 
+
+INFO:Detectors:
+VaultRegistry.getUserTotalDebt(address) (src/VaultRegistry.sol#65-76) has external calls inside a loop: (None,debt,None,None,None,None) = ICDPVault(vaultList[i]).positions(user) (src/VaultRegistry.sol#68)
+BalancerOracle._getTokenPrice(uint256) (src/oracle/BalancerOracle.sol#165-173) has external calls inside a loop: chainlinkOracle.spot(token) (src/oracle/BalancerOracle.sol#172)
+TransferAction._transferFrom(address,address,address,uint256,PermitParams) (src/proxy/TransferAction.sol#46-81) has external calls inside a loop: ISignatureTransfer(permit2).permitTransferFrom(ISignatureTransfer.PermitTransferFrom({permitted:ISignatureTransfer.TokenPermissions({token:token,amount:params.approvalAmount}),nonce:params.nonce,deadline:params.deadline}),ISignatureTransfer.SignatureTransferDetails({to:to,requestedAmount:amount}),from,bytes.concat(params.r,params.s,bytes1(params.v))) (src/proxy/TransferAction.sol#55-64)
+BaseAction._delegateCall(address,bytes) (src/proxy/BaseAction.sol#20-24) has external calls inside a loop: (success,returnData) = to.delegatecall(data) (src/proxy/BaseAction.sol#21)
+PositionAction.multisend(address[],bytes[],bool[]) (src/proxy/PositionAction.sol#269-286) has external calls inside a loop: (success,response) = targets[i].call(data[i]) (src/proxy/PositionAction.sol#279)
+PoolQuotaKeeperV3.poolQuotaRevenue() (src/quotas/PoolQuotaKeeperV3.sol#135-153) has external calls inside a loop: quotaRevenue += (IPoolV3(pool).creditManagerBorrowed(creditManagers[token]) * rate) / PERCENTAGE_FACTOR (src/quotas/PoolQuotaKeeperV3.sol#147)
+PoolQuotaKeeperV3.updateRates() (src/quotas/PoolQuotaKeeperV3.sol#183-221) has external calls inside a loop: quotaRevenue += (IPoolV3(pool).creditManagerBorrowed(creditManagers[token]) * rate) / PERCENTAGE_FACTOR (src/quotas/PoolQuotaKeeperV3.sol#210)
+EligibilityDataProvider._lockedUsdValue(uint256) (src/reward/EligibilityDataProvider.sol#274-277) has external calls inside a loop: lpPrice = priceProvider.getLpTokenPriceUsd() (src/reward/EligibilityDataProvider.sol#275)
+MultiFeeDistribution._notifyUnseenReward(address) (src/reward/MultiFeeDistribution.sol#1223-1237) has external calls inside a loop: unseen = IERC20(token).balanceOf(address(this)) - r.balance (src/reward/MultiFeeDistribution.sol#1232)
+MultiFeeDistribution._notifyReward(address,uint256) (src/reward/MultiFeeDistribution.sol#1187-1215) has external calls inside a loop: lpUsdValue = IPriceProvider(_priceProvider).getRewardTokenPrice(rewardToken,reward) (src/reward/MultiFeeDistribution.sol#1213)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop 
+
+INFO:Detectors:
+Reentrancy in MultiFeeDistribution._notifyReward(address,uint256) (src/reward/MultiFeeDistribution.sol#1187-1215):
+	External calls:
+	- IERC20(rewardToken).safeTransfer(operationExpenseReceiver_,opExAmount) (src/reward/MultiFeeDistribution.sol#1193)
+	State variables written after the call(s):
+	- r.rewardPerSecond = (reward * 1e12) / rewardsDuration (src/reward/MultiFeeDistribution.sol#1200)
+	- r.rewardPerSecond = ((reward + leftover) * 1e12) / rewardsDuration (src/reward/MultiFeeDistribution.sol#1204)
+	- r.lastUpdateTime = block.timestamp (src/reward/MultiFeeDistribution.sol#1207)
+	- r.periodFinish = block.timestamp + rewardsDuration (src/reward/MultiFeeDistribution.sol#1208)
+	- r.balance = r.balance + reward (src/reward/MultiFeeDistribution.sol#1209)
+Reentrancy in GaugeV3._unvote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#187-210):
+	External calls:
+	- _checkAndUpdateEpoch() (src/quotas/GaugeV3.sol#190)
+		- _poolQuotaKeeper().updateRates() (src/quotas/GaugeV3.sol#86)
+	State variables written after the call(s):
+	- uv.votesLpSide -= votes (src/quotas/GaugeV3.sol#199)
+	- uv.votesCaSide -= votes (src/quotas/GaugeV3.sol#205)
+Reentrancy in GaugeV3._vote(address,uint96,address,bool) (src/quotas/GaugeV3.sol#144-161):
+	External calls:
+	- _checkAndUpdateEpoch() (src/quotas/GaugeV3.sol#147)
+		- _poolQuotaKeeper().updateRates() (src/quotas/GaugeV3.sol#86)
+	State variables written after the call(s):
+	- uv.votesLpSide += votes (src/quotas/GaugeV3.sol#154)
+	- uv.votesCaSide += votes (src/quotas/GaugeV3.sol#157)
+Reentrancy in ChefIncentivesController.afterLockUpdate(address) (src/reward/ChefIncentivesController.sol#674-684):
+	External calls:
+	- isCurrentlyEligible = eligibleDataProvider.refresh(_user) (src/reward/ChefIncentivesController.sol#677)
+	State variables written after the call(s):
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#679)
+		- accountedRewards = accountedRewards + reward (src/reward/ChefIncentivesController.sol#480)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#679)
+		- endingTime.lastUpdatedTime = block.timestamp (src/reward/ChefIncentivesController.sol#892)
+		- endingTime.estimatedTime = type()(uint256).max (src/reward/ChefIncentivesController.sol#895)
+		- endingTime.estimatedTime = newEndTime (src/reward/ChefIncentivesController.sol#899)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#679)
+		- userBaseClaimable[_user] = userBaseClaimable[_user] + pending (src/reward/ChefIncentivesController.sol#645)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#679)
+		- user.amount = _balance (src/reward/ChefIncentivesController.sol#649)
+		- user.rewardDebt = (_balance * accRewardPerShare) / ACC_REWARD_PRECISION (src/reward/ChefIncentivesController.sol#650)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#679)
+		- pool.totalSupply = pool.totalSupply - user.amount (src/reward/ChefIncentivesController.sol#648)
+		- pool.totalSupply = pool.totalSupply + _balance (src/reward/ChefIncentivesController.sol#651)
+Reentrancy in ChefIncentivesController.claim(address,address[]) (src/reward/ChefIncentivesController.sol#518-550):
+	External calls:
+	- checkAndProcessEligibility(_user,true,true) (src/reward/ChefIncentivesController.sol#521)
+		- isEligible = eligibleDataProvider.refresh(_user) (src/reward/ChefIncentivesController.sol#768)
+		- eligibleDataProvider.setDqTime(_user,block.timestamp) (src/reward/ChefIncentivesController.sol#806)
+	State variables written after the call(s):
+	- _updateEmissions() (src/reward/ChefIncentivesController.sol#524)
+		- emissionScheduleIndex = i (src/reward/ChefIncentivesController.sol#363)
+	- _updateEmissions() (src/reward/ChefIncentivesController.sol#524)
+		- lastRPS = rewardsPerSecond (src/reward/ChefIncentivesController.sol#442)
+Reentrancy in ChefIncentivesController.handleActionAfter(address,uint256,uint256) (src/reward/ChefIncentivesController.sol#596-617):
+	External calls:
+	- isCurrentlyEligible = eligibleDataProvider.refresh(_user) (src/reward/ChefIncentivesController.sol#604)
+	State variables written after the call(s):
+	- _handleActionAfterForToken(msg.sender,_user,_balance,_totalSupply) (src/reward/ChefIncentivesController.sol#607)
+		- accountedRewards = accountedRewards + reward (src/reward/ChefIncentivesController.sol#480)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#609)
+		- accountedRewards = accountedRewards + reward (src/reward/ChefIncentivesController.sol#480)
+	- _handleActionAfterForToken(msg.sender,_user,_balance,_totalSupply) (src/reward/ChefIncentivesController.sol#607)
+		- endingTime.lastUpdatedTime = block.timestamp (src/reward/ChefIncentivesController.sol#892)
+		- endingTime.estimatedTime = type()(uint256).max (src/reward/ChefIncentivesController.sol#895)
+		- endingTime.estimatedTime = newEndTime (src/reward/ChefIncentivesController.sol#899)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#609)
+		- endingTime.lastUpdatedTime = block.timestamp (src/reward/ChefIncentivesController.sol#892)
+		- endingTime.estimatedTime = type()(uint256).max (src/reward/ChefIncentivesController.sol#895)
+		- endingTime.estimatedTime = newEndTime (src/reward/ChefIncentivesController.sol#899)
+	- _handleActionAfterForToken(msg.sender,_user,_balance,_totalSupply) (src/reward/ChefIncentivesController.sol#607)
+		- userBaseClaimable[_user] = userBaseClaimable[_user] + pending (src/reward/ChefIncentivesController.sol#645)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#609)
+		- userBaseClaimable[_user] = userBaseClaimable[_user] + pending (src/reward/ChefIncentivesController.sol#645)
+	- _handleActionAfterForToken(msg.sender,_user,_balance,_totalSupply) (src/reward/ChefIncentivesController.sol#607)
+		- user.amount = _balance (src/reward/ChefIncentivesController.sol#649)
+		- user.rewardDebt = (_balance * accRewardPerShare) / ACC_REWARD_PRECISION (src/reward/ChefIncentivesController.sol#650)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#609)
+		- user.amount = _balance (src/reward/ChefIncentivesController.sol#649)
+		- user.rewardDebt = (_balance * accRewardPerShare) / ACC_REWARD_PRECISION (src/reward/ChefIncentivesController.sol#650)
+	- _handleActionAfterForToken(msg.sender,_user,_balance,_totalSupply) (src/reward/ChefIncentivesController.sol#607)
+		- pool.totalSupply = pool.totalSupply - user.amount (src/reward/ChefIncentivesController.sol#648)
+		- pool.totalSupply = pool.totalSupply + _balance (src/reward/ChefIncentivesController.sol#651)
+	- _updateRegisteredBalance(_user) (src/reward/ChefIncentivesController.sol#609)
+		- pool.totalSupply = pool.totalSupply - user.amount (src/reward/ChefIncentivesController.sol#648)
+		- pool.totalSupply = pool.totalSupply + _balance (src/reward/ChefIncentivesController.sol#651)
+Reentrancy in EligibilityDataProvider.refresh(address) (src/reward/EligibilityDataProvider.sol#249-259):
+	External calls:
+	- updatePrice() (src/reward/EligibilityDataProvider.sol#253)
+		- priceProvider.update() (src/reward/EligibilityDataProvider.sol#265)
+	State variables written after the call(s):
+	- disqualifiedTime[user] = 0 (src/reward/EligibilityDataProvider.sol#256)
+	- lastEligibleStatus[user] = currentEligibility (src/reward/EligibilityDataProvider.sol#258)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-2 
+
+INFO:Detectors:
+ChefIncentivesController._updatePool(ChefIncentivesController.VaultInfo,uint256) (src/reward/ChefIncentivesController.sol#469-483) has costly operations inside a loop:
+	- accountedRewards = accountedRewards + reward (src/reward/ChefIncentivesController.sol#480)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#costly-operations-inside-a-loop 
+
+INFO:Detectors:
+MultiFeeDistribution.withdraw(uint256) (src/reward/MultiFeeDistribution.sol#537-611) has a high cyclomatic complexity (12).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity 
+
+INFO:Detectors:
+CDPVault.calcAccruedInterest(uint256,uint256,uint256) (src/CDPVault.sol#717-724) is never used and should be removed
+FlashLoanReceiverBase.approvePayback(uint256) (src/interfaces/IFlashlender.sol#113-116) is never used and should be removed
+PoolQuotaKeeperV3.isInitialised(TokenQuotaParams) (src/quotas/PoolQuotaKeeperV3.sol#254-256) is never used and should be removed
+SwapAction._revertBytes(bytes) (src/proxy/SwapAction.sol#335-342) is never used and should be removed
+max(uint256,uint256) (src/utils/Math.sol#51-55) is never used and should be removed
+min(int256,int256) (src/utils/Math.sol#44-48) is never used and should be removed
+min(uint256,uint256) (src/utils/Math.sol#37-41) is never used and should be removed
+mul(uint256,int256) (src/utils/Math.sol#74-79) is never used and should be removed
+sub(uint256,int256) (src/utils/Math.sol#66-71) is never used and should be removed
+toUint64(uint256) (src/utils/Math.sol#23-26) is never used and should be removed
+wdivUp(uint256,uint256) (src/utils/Math.sol#137-149) is never used and should be removed
+wmul(uint256,int256) (src/utils/Math.sol#97-101) is never used and should be removed
+wmulUp(uint256,uint256) (src/utils/Math.sol#105-117) is never used and should be removed
+wpow(uint256,uint256,uint256) (src/utils/Math.sol#152-203) is never used and should be removed
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dead-code 
+
+INFO:Detectors:
+Redundant expression "index (src/reward/MultiFeeDistribution.sol#1399)" inMultiFeeDistribution (src/reward/MultiFeeDistribution.sol#23-1489)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#redundant-statements 
+
+INFO:Detectors:
+MultiFeeDistribution.slitherConstructorConstantVariables() (src/reward/MultiFeeDistribution.sol#23-1489) uses literals with too many digits:
+	- WHOLE = 100000 (src/reward/MultiFeeDistribution.sol#39)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#too-many-digits 
+
+INFO:Detectors:
+FlashLoanReceiverBase (src/interfaces/IFlashlender.sol#103-117) does not implement functions:
+	- ICreditFlashBorrower.onCreditFlashLoan(address,uint256,uint256,bytes) (src/interfaces/IFlashlender.sol#56-61)
+	- IERC3156FlashBorrower.onFlashLoan(address,address,uint256,uint256,bytes) (src/interfaces/IFlashlender.sol#15-21)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unimplemented-functions 
+
+INFO:Detectors:
+The following unused import(s) in src/interfaces/ICDPVault.sol should be removed:
+	-import {IInterestRateModel} from "./IInterestRateModel.sol"; (src/interfaces/ICDPVault.sol#12)
+
+	-import {IBuffer} from "./IBuffer.sol"; (src/interfaces/ICDPVault.sol#9)
+The following unused import(s) in src/PoolV3.sol should be removed:
+	-import {ICDM} from "./interfaces/ICDM.sol"; (src/PoolV3.sol#35)
+The following unused import(s) in src/VaultRegistry.sol should be removed:
+	-import {Permission} from "./utils/Permission.sol"; (src/VaultRegistry.sol#6)
+The following unused import(s) in src/oracle/BalancerOracle.sol should be removed:
+	-import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol"; (src/oracle/BalancerOracle.sol#6)
+The following unused import(s) in src/quotas/PoolQuotaKeeperV3.sol should be removed:
+	-import {ICreditManagerV3} from "@gearbox-protocol/core-v3/contracts/interfaces/ICreditManagerV3.sol"; (src/quotas/PoolQuotaKeeperV3.sol#17)
+The following unused import(s) in src/reward/interfaces/IFeeDistribution.sol should be removed:
+	-import "./LockedBalance.sol"; (src/reward/interfaces/IFeeDistribution.sol#5)
+The following unused import(s) in src/vendor/AuraVault.sol should be removed:
+	-import {IVault, BatchSwapStep, FundManagement, SwapKind} from "../vendor/IBalancerVault.sol"; (src/vendor/AuraVault.sol#16)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-imports 
+
+INFO:Detectors:
+BalancerOracle.__gap (src/oracle/BalancerOracle.sol#53) is never used in BalancerOracle (src/oracle/BalancerOracle.sol#15-174)
+ChainlinkOracle.__gap (src/oracle/ChainlinkOracle.sol#32) is never used in ChainlinkOracle (src/oracle/ChainlinkOracle.sol#15-118)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-state-variable 
+
+INFO:Detectors:
+StakingLPEth.MAX_COOLDOWN_DURATION (src/StakingLPEth.sol#34) should be constant 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-constant
+INFO:Slither:. analyzed (166 contracts with 87 detectors), 123 result(s) found
