@@ -9,8 +9,8 @@
 - Join [C4 Discord](https://discord.gg/code4rena) to register
 - Submit findings [using the C4 form](https://code4rena.com/contests/2024-07-loopfi/submit)
 - [Read our guidelines for more details](https://docs.code4rena.com/roles/wardens)
-- Starts July 24, 2024 20:00 UTC
-- Ends August 14, 2024 20:00 UTC
+- Starts July 25, 2024 20:00 UTC
+- Ends August 15, 2024 20:00 UTC
 
 ## Automated Findings / Publicly Known Issues
 
