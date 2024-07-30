@@ -6,11 +6,19 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {TransferAction, PermitParams} from "./TransferAction.sol";
 
 import {IVault, JoinKind, JoinPoolRequest, ExitKind, ExitPoolRequest} from "../vendor/IBalancerVault.sol";
+import {IPActionAddRemoveLiqV3} from "pendle/interfaces/IPActionAddRemoveLiqV3.sol";
+import {TokenInput, LimitOrderData} from "pendle/interfaces/IPAllActionTypeV3.sol";
+import {ApproxParams} from "pendle/router/base/MarketApproxLib.sol";
+import {IPPrincipalToken} from "pendle/interfaces/IPPrincipalToken.sol";
+import {IStandardizedYield} from "pendle/interfaces/IStandardizedYield.sol";
+import {IPYieldToken} from "pendle/interfaces/IPYieldToken.sol";
+import {IPMarket} from "pendle/interfaces/IPMarket.sol";
 
 /// @notice The protocol to use
 enum Protocol {
     BALANCER,
-    UNIV3
+    UNIV3,
+    PENDLE
 }
 
 /// @notice The parameters for a join
@@ -35,7 +43,8 @@ contract PoolAction is TransferAction {
 
     /// @notice Balancer v2 Vault
     IVault public immutable balancerVault;
-
+    /// @notice Pendle Router
+    IPActionAddRemoveLiqV3 public immutable pendleRouter;
     /*//////////////////////////////////////////////////////////////
                                  ERRORS
     //////////////////////////////////////////////////////////////*/
@@ -49,8 +58,9 @@ contract PoolAction is TransferAction {
                              INITIALIZATION
     //////////////////////////////////////////////////////////////*/
 
-    constructor(address balancerVault_) {
+    constructor(address balancerVault_, address _pendleRouter) {
         balancerVault = IVault(balancerVault_);
+        pendleRouter = IPActionAddRemoveLiqV3(_pendleRouter);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -87,9 +97,13 @@ contract PoolAction is TransferAction {
                         ++i;
                     }
                 }
-            } else {
-                revert PoolAction__transferAndJoin_unsupportedProtocol();
-            }
+            } else if(poolActionParams.protocol == Protocol.PENDLE) {
+                (, , TokenInput memory input,) = abi.decode(poolActionParams.args, (address, ApproxParams, TokenInput , LimitOrderData));
+                
+                if (input.tokenIn != address(0)) {
+                    _transferFrom(input.tokenIn, from, address(this), input.netTokenIn, permitParams[0]);
+                }
+            } else  revert PoolAction__transferAndJoin_unsupportedProtocol();
         }
 
         join(poolActionParams);
@@ -97,9 +111,11 @@ contract PoolAction is TransferAction {
 
     /// @notice Perform a join using the specified protocol
     /// @param poolActionParams The parameters for the join
-    function join(PoolActionParams memory poolActionParams) public {
+    function join(PoolActionParams memory poolActionParams) public payable {
         if (poolActionParams.protocol == Protocol.BALANCER) {
             _balancerJoin(poolActionParams);
+        } else if(poolActionParams.protocol == Protocol.PENDLE) {
+            _pendleJoin(poolActionParams);
         } else {
             revert PoolAction__join_unsupportedProtocol();
         }
@@ -134,6 +150,26 @@ contract PoolAction is TransferAction {
                 fromInternalBalance: false
             })
         );
+    }
+
+    /// @notice Perform a join using the Pendle protocol
+    /// @param poolActionParams The parameters for the join
+    /// @dev For more information regarding the Pendle join function check Pendle 
+    /// documentation
+    function _pendleJoin(PoolActionParams memory poolActionParams) internal {
+        (
+            address market,
+            ApproxParams memory guessPtReceivedFromSy,
+            TokenInput memory input,
+            LimitOrderData memory limit
+        ) = abi.decode(poolActionParams.args, (address, ApproxParams, TokenInput , LimitOrderData));
+        
+        
+        if (input.tokenIn != address(0)) {
+                IERC20(input.tokenIn ).forceApprove(address(pendleRouter),input.netTokenIn);
+            }
+
+        pendleRouter.addLiquiditySingleToken{value: msg.value}(poolActionParams.recipient, market, poolActionParams.minOut, guessPtReceivedFromSy, input, limit);
     }
 
     /// @notice Helper function to update the join parameters for a levered position
@@ -195,9 +231,11 @@ contract PoolAction is TransferAction {
     function exit(PoolActionParams memory poolActionParams) public returns (uint256 retAmount) {
         if (poolActionParams.protocol == Protocol.BALANCER) {
             retAmount = _balancerExit(poolActionParams);
-        } else {
+        } else if(poolActionParams.protocol == Protocol.PENDLE) {
+            retAmount = _pendleExit(poolActionParams);
+        } else
             revert PoolAction__exit_unsupportedProtocol();
-        }
+        
     }
 
     function _balancerExit(PoolActionParams memory poolActionParams) internal returns (uint256 retAmount) {
@@ -236,4 +274,34 @@ contract PoolAction is TransferAction {
 
         return IERC20(assets[outIndex]).balanceOf(address(poolActionParams.recipient));
     }
+    
+    function _pendleExit(PoolActionParams memory poolActionParams) internal returns (uint256 retAmount){
+        (
+        address market, uint256 netLpIn, address tokenOut
+        ) = abi.decode(poolActionParams.args, (address,uint256, address));
+            
+        (IStandardizedYield SY, IPPrincipalToken PT, IPYieldToken YT) = IPMarket(market).readTokens();
+
+        if(poolActionParams.recipient != address(this)){
+            IPMarket(market).transferFrom(poolActionParams.recipient, market, netLpIn);
+        } else {
+            IPMarket(market).transfer(market, netLpIn);
+        }
+
+
+        uint256 netSyToRedeem;
+
+        if (PT.isExpired()) {
+            (uint256 netSyRemoved, ) = IPMarket(market).burn(address(SY), address(YT), netLpIn);
+            uint256 netSyFromPt = YT.redeemPY(address(SY));
+            netSyToRedeem = netSyRemoved + netSyFromPt;
+        } else {
+            (uint256 netSyRemoved, uint256 netPtRemoved) = IPMarket(market).burn(address(SY), market, netLpIn);
+            bytes memory empty;
+            (uint256 netSySwappedOut, ) = IPMarket(market).swapExactPtForSy(address(SY), netPtRemoved, empty);
+            netSyToRedeem = netSyRemoved + netSySwappedOut;
+        }
+
+        return SY.redeem(poolActionParams.recipient, netSyToRedeem, tokenOut, poolActionParams.minOut, true);
+     }
 }

@@ -94,7 +94,6 @@ contract StakingLPEthTest is TestBase {
         test_deposit_user1();
         _sendRewards();
         vm.startPrank(user1);
-        uint shares = stakingLpEth.balanceOf(user1) / 2;
         stakingLpEth.cooldownShares(stakingLpEth.balanceOf(user1));
         vm.expectRevert(StakingLPEth.InvalidCooldown.selector);
         stakingLpEth.unstake(user1);

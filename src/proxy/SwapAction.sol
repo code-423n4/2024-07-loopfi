@@ -6,15 +6,23 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {IUniswapV3Router, ExactInputParams, ExactOutputParams, decodeLastToken} from "../vendor/IUniswapV3Router.sol";
 import {IVault, SwapKind, BatchSwapStep, FundManagement} from "../vendor/IBalancerVault.sol";
-
+import {TokenInput, LimitOrderData} from "pendle/interfaces/IPAllActionTypeV3.sol";
+import {ApproxParams} from "pendle/router/base/MarketApproxLib.sol";
+import {IPActionAddRemoveLiqV3} from "pendle/interfaces/IPActionAddRemoveLiqV3.sol";
+import {IPPrincipalToken} from "pendle/interfaces/IPPrincipalToken.sol";
+import {IStandardizedYield} from "pendle/interfaces/IStandardizedYield.sol";
+import {IPYieldToken} from "pendle/interfaces/IPYieldToken.sol";
+import {IPMarket} from "pendle/interfaces/IPMarket.sol";
 import {toInt256, abs} from "../utils/Math.sol";
-
+import {console} from "forge-std/console.sol";
 import {TransferAction, PermitParams} from "./TransferAction.sol";
 
 /// @notice The swap protocol to use
 enum SwapProtocol {
     BALANCER,
-    UNIV3
+    UNIV3,
+    PENDLE_IN,
+    PENDLE_OUT
 }
 
 /// @notice The type of swap to perform
@@ -54,7 +62,8 @@ contract SwapAction is TransferAction {
     IVault public immutable balancerVault;
     /// @notice Uniswap v3 Router
     IUniswapV3Router public immutable uniRouter;
-
+    /// @notice Pendle Router
+    IPActionAddRemoveLiqV3 public immutable pendleRouter;
     /*//////////////////////////////////////////////////////////////
                                  ERRORS
     //////////////////////////////////////////////////////////////*/
@@ -66,9 +75,10 @@ contract SwapAction is TransferAction {
                              INITIALIZATION
     //////////////////////////////////////////////////////////////*/
 
-    constructor(IVault balancerVault_, IUniswapV3Router uniRouter_) {
+    constructor(IVault balancerVault_, IUniswapV3Router uniRouter_, IPActionAddRemoveLiqV3 pendleRouter_) {
         balancerVault = balancerVault_;
         uniRouter = uniRouter_;
+        pendleRouter = pendleRouter_;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -95,7 +105,7 @@ contract SwapAction is TransferAction {
     /// @notice Perform a swap using the protocol and swap-type specified in `swapParams`
     /// @param swapParams The parameters for the swap
     /// @return retAmount Amount of tokens taken or received from the swap
-    function swap(SwapParams memory swapParams) public returns (uint256 retAmount) {
+    function swap(SwapParams memory swapParams) public payable returns (uint256 retAmount) {
         if (swapParams.swapProtocol == SwapProtocol.BALANCER) {
             (bytes32[] memory poolIds, address[] memory assetPath) = abi.decode(
                 swapParams.args,
@@ -121,10 +131,11 @@ contract SwapAction is TransferAction {
                 swapParams.deadline,
                 swapParams.args
             );
-        } else {
-            revert SwapAction__swap_notSupported();
-        }
-
+        } else if (swapParams.swapProtocol == SwapProtocol.PENDLE_IN) {
+            retAmount = pendleJoin(swapParams.recipient, swapParams.limit, swapParams.args);
+        } else if (swapParams.swapProtocol == SwapProtocol.PENDLE_OUT) {
+            retAmount = pendleExit(swapParams.recipient, swapParams.amount, swapParams.args);
+        } else revert SwapAction__swap_notSupported();
         // Transfer any remaining tokens to the recipient
         if (swapParams.swapType == SwapType.EXACT_OUT && swapParams.recipient != address(this)) {
             IERC20(swapParams.assetIn).safeTransfer(swapParams.recipient, swapParams.limit - retAmount);
@@ -313,6 +324,57 @@ contract SwapAction is TransferAction {
                 );
         }
     }
+
+    /// @notice Perform a join using the Pendle protocol
+    /// @param recipient Address to send the swapped tokens to
+    /// @param minOut Minimum amount of LP tokens to receive
+    /// @param data The parameters for joinng the pool
+    /// @dev For more information regarding the Pendle join function check Pendle 
+    /// documentation
+    function pendleJoin(address recipient, uint256 minOut, bytes memory data) internal returns (uint256 netLpOut){
+        (
+            address market,
+            ApproxParams memory guessPtReceivedFromSy,
+            TokenInput memory input,
+            LimitOrderData memory limit
+        ) = abi.decode(data, (address, ApproxParams, TokenInput , LimitOrderData));
+        
+        if (input.tokenIn != address(0)) {
+                input.netTokenIn = IERC20(input.tokenIn).balanceOf(address(this));
+                IERC20(input.tokenIn).forceApprove(address(pendleRouter),input.netTokenIn);
+            }
+
+        (netLpOut,,) = pendleRouter.addLiquiditySingleToken{value: msg.value}(recipient, market, minOut, guessPtReceivedFromSy, input, limit);
+    }
+
+    function pendleExit(address recipient, uint256 minOut, bytes memory data) internal returns (uint256 retAmount){
+        (
+        address market, uint256 netLpIn, address tokenOut
+        ) = abi.decode(data, (address,uint256, address));
+            
+        (IStandardizedYield SY, IPPrincipalToken PT, IPYieldToken YT) = IPMarket(market).readTokens();
+
+        if(recipient != address(this)){
+            IPMarket(market).transferFrom(recipient, market, netLpIn);
+        } else {
+            IPMarket(market).transfer(market, netLpIn);
+        }
+
+        uint256 netSyToRedeem;
+
+        if (PT.isExpired()) {
+            (uint256 netSyRemoved, ) = IPMarket(market).burn(address(SY), address(YT), netLpIn);
+            uint256 netSyFromPt = YT.redeemPY(address(SY));
+            netSyToRedeem = netSyRemoved + netSyFromPt;
+        } else {
+            (uint256 netSyRemoved, uint256 netPtRemoved) = IPMarket(market).burn(address(SY), market, netLpIn);
+            bytes memory empty;
+            (uint256 netSySwappedOut, ) = IPMarket(market).swapExactPtForSy(address(SY), netPtRemoved, empty);
+            netSyToRedeem = netSyRemoved + netSySwappedOut;
+        }
+
+        return SY.redeem(recipient, netSyToRedeem, tokenOut, minOut, true);
+     }
 
     /// @notice Helper function that decodes the swap params and returns the token that will be swapped into
     /// @param swapParams The parameters for the swap

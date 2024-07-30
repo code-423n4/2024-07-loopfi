@@ -18,6 +18,7 @@ import {PermitMaker} from "../utils/PermitMaker.sol";
 
 import {ApprovalType, PermitParams} from "../../proxy/TransferAction.sol";
 import {SwapAction, SwapParams, SwapType, SwapProtocol} from "../../proxy/SwapAction.sol";
+import {IPActionAddRemoveLiqV3} from "pendle/interfaces/IPActionAddRemoveLiqV3.sol";
 
 contract SwapActionTest is Test {
     using SafeERC20 for ERC20;
@@ -34,6 +35,7 @@ contract SwapActionTest is Test {
     address internal constant ONE_INCH = 0x1111111254EEB25477B68fb85Ed929f73A960582;
     address internal constant BALANCER_VAULT = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
     address internal constant UNISWAP_V3 = 0xE592427A0AEce92De3Edee1F18E0157C05861564;
+    address internal constant PENDLE_ROUTER= 0x00000000005BBB0EF59571E58418F9a4357b68A0;
 
     // Permit2
     ISignatureTransfer internal constant permit2 = ISignatureTransfer(0x000000000022D473030F116dDEE9F6B43aC78BA3);
@@ -68,7 +70,7 @@ contract SwapActionTest is Test {
     function setUp() public {
         vm.createSelectFork(vm.rpcUrl("mainnet"), 17055414); // 15/04/2023 20:43:00 UTC
 
-        swapAction = new SwapAction(balancerVault, univ3Router);
+        swapAction = new SwapAction(balancerVault, univ3Router, IPActionAddRemoveLiqV3(PENDLE_ROUTER));
 
         userPk = 0x12341234;
         user = vm.addr(userPk);

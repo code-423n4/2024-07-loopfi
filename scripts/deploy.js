@@ -193,6 +193,10 @@ async function deployCore() {
 
   const pool = await deployGearbox();
 
+  // Deploy Vault Registry
+  const vaultRegistry = await deployContract('VaultRegistry');
+  console.log('Vault Registry deployed to:', vaultRegistry.address);
+
   const flashlender = await deployContract('Flashlender', 'Flashlender', false, pool.address, CONFIG.Core.Flashlender.constructorArguments.protocolFee_);
 
   const UINT256_MAX = ethers.constants.MaxUint256;
@@ -210,8 +214,9 @@ async function deployCore() {
   );
 
   await deployContract('ERC165Plugin');
-  await deployContract('PositionAction20', 'PositionAction20', false, flashlender.address, swapAction.address, poolAction.address);
-  await deployContract('PositionAction4626', 'PositionAction4626', false, flashlender.address, swapAction.address, poolAction.address);
+  await deployContract('PositionAction20', 'PositionAction20', false, flashlender.address, swapAction.address, poolAction.address, vaultRegistry.address);
+  await deployContract('PositionAction4626', 'PositionAction4626', false, flashlender.address, swapAction.address, poolAction.address, vaultRegistry.address);
+  await deployContract('PositionActionPendle', 'PositionActionPendle', false, flashlender.address, swapAction.address, poolAction.address, vaultRegistry.address);
 
   console.log('------------------------------------');
 
@@ -233,15 +238,6 @@ async function deployGearbox() {
 
   const signer = await getSignerAddress();
 
-  // Deploy Mock WETH contract
-  const mockWETH = await deployContract(
-    'ERC20PresetMinterPauser',
-    'MockWETH',
-    false, // not a vault
-    "Pool Underlying WETH", // name
-    "WETH" // symbol
-  );
-
   // Deploy LinearInterestRateModelV3 contract
   const LinearInterestRateModelV3 = await deployContract(
     'LinearInterestRateModelV3',
@@ -258,10 +254,11 @@ async function deployGearbox() {
 
   // Deploy ACL contract
   const ACL = await deployContract('ACL', 'ACL', false);
+  const underlierAddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 
   // Deploy AddressProviderV3 contract and set addresses
   const AddressProviderV3 = await deployContract('AddressProviderV3', 'AddressProviderV3', false, ACL.address);
-  await AddressProviderV3.setAddress(toBytes32('WETH_TOKEN'), mockWETH.address, false);
+  await AddressProviderV3.setAddress(toBytes32('WETH_TOKEN'), underlierAddress, false);
   await AddressProviderV3.setAddress(toBytes32('TREASURY'), CONFIG.Core.Gearbox.treasury, false);
 
   // Deploy ContractsRegister and set its address in AddressProviderV3
@@ -274,24 +271,24 @@ async function deployGearbox() {
     'PoolV3',
     false, // not a vault
     AddressProviderV3.address, // addressProvider_
-    mockWETH.address, // underlyingToken_
+    underlierAddress, // underlyingToken_
     LinearInterestRateModelV3.address, // interestRateModel_
     CONFIG.Core.Gearbox.initialGlobalDebtCeiling, // Debt ceiling
     "Loop Liquidity Pool", // name_
     "lpETH " // symbol_
   );
 
-  // Mint and deposit WETH to the PoolV3 contract
-  const availableLiquidity = ethers.utils.parseEther('1000000'); // 1,000,000 WETH
+  // // Mint and deposit WETH to the PoolV3 contract
+  // const availableLiquidity = ethers.utils.parseEther('1000000'); // 1,000,000 WETH
 
-  await mockWETH.mint(signer, availableLiquidity);
-  await mockWETH.approve(PoolV3.address, availableLiquidity);
-  await PoolV3.deposit(availableLiquidity, signer);
+  // await mockWETH.mint(signer, availableLiquidity);
+  // await mockWETH.approve(PoolV3.address, availableLiquidity);
+  // await PoolV3.deposit(availableLiquidity, signer);
 
   console.log('Gearbox Contracts Deployed');
 
-  await verifyOnTenderly('ERC20PresetMinterPauser', mockWETH.address);
-  await storeContractDeployment(false, 'MockWETH', mockWETH.address, 'ERC20PresetMinterPauser');
+  // await verifyOnTenderly('ERC20PresetMinterPauser', mockWETH.address);
+  // await storeContractDeployment(false, 'MockWETH', mockWETH.address, 'ERC20PresetMinterPauser');
   
   await verifyOnTenderly('LinearInterestRateModelV3', LinearInterestRateModelV3.address);
   await storeContractDeployment(false, 'LinearInterestRateModelV3', LinearInterestRateModelV3.address, 'LinearInterestRateModelV3');
@@ -365,8 +362,25 @@ async function deployVaults() {
     const vaultName = `CDPVault_${key}`;
     console.log('deploying vault ', vaultName);
 
+    // Deploy oracle for the vault if defined in the config
+    let oracleAddress = oracle.address;
+    if (config.oracle) {
+      console.log('Deploying oracle for', key);
+      const oracleConfig = config.oracle.deploymentArguments;
+      const deployedOracle = await deployContract(
+        config.oracle.type,
+        config.oracle.type,
+        false,
+        ...Object.values(oracleConfig)
+      );
+      oracleAddress = deployedOracle.address;
+      console.log(`Oracle deployed for ${key} at ${oracleAddress}`);
+    }
+
     var token;
     var tokenAddress = config.token;
+    let tokenScale = config.tokenScale;
+    let tokenSymbol = config.tokenSymbol;
 
     // initialize the token
     console.log('Token address:', tokenAddress);
@@ -380,21 +394,19 @@ async function deployVaults() {
         "MCT" // symbol
       );
       tokenAddress = token.address;
-    } else {
-      // search for the token in the deployed contracts
-      token = contracts[config.tokenName];
-      tokenAddress = token.address;
+      tokenScale = new ethers.BigNumber.from(10).pow(await token.decimals());
+      tokenSymbol = "MCT";
     }
+    
     console.log('Token address:', tokenAddress);
-
-    const tokenScale = new ethers.BigNumber.from(10).pow(await token.decimals());
+    
     const cdpVault = await deployContract(
       'CDPVault',
       vaultName,
       true,
       [
         pool.address,
-        oracle.address,
+        oracleAddress,
         tokenAddress,
         tokenScale
       ],
@@ -409,11 +421,9 @@ async function deployVaults() {
 
     console.log('Initialized', vaultName, 'with a debt ceiling of', fromWad(config.deploymentArguments.debtCeiling), 'Credit');
 
-    await oracle.updateSpot(tokenAddress, config.oracle.defaultPrice);
-    console.log('Updated default price for', key, 'to', fromWad(config.oracle.defaultPrice), 'USD');
-
-    const underlier = (config.collateralType === "ERC4626")
-      ? await attachContract('ERC20PresetMinterPauser', config.underlier) : null;
+    // if (config.oracle)
+    // await oracle.updateSpot(tokenAddress, config.oracle.defaultPrice);
+    // console.log('Updated default price for', key, 'to', fromWad(config.oracle.defaultPrice), 'USD');
 
     await storeVaultMetadata(
       cdpVault.address,
@@ -427,19 +437,9 @@ async function deployVaults() {
         oracle: oracle.address,
         token: tokenAddress,
         tokenScale: tokenScale,
-        tokenSymbol: await token.symbol(),
+        tokenSymbol: tokenSymbol,
         tokenName: config.tokenName,
-        tokenIcon: config.tokenIcon,
-        underlier: (config.collateralType === "ERC4626")
-          ? config.underlier : null,
-        underlierScale: (config.collateralType === "ERC4626")
-          ? new ethers.BigNumber.from(10).pow(await underlier.decimals()) : null,
-        underlierSymbol: (config.collateralType === "ERC4626")
-          ? await underlier.symbol() : null,
-        underlierName: (config.collateralType === "ERC4626") ? config.underlierName : null,
-        underlierIcon: (config.collateralType === "ERC4626") ? config.underlierIcon : null,
-        protocolName: (config.collateralType === "ERC4626") ? config.protocolName : null,
-        protocolIcon: (config.collateralType === "ERC4626") ? config.protocolIcon : null
+        tokenIcon: config.tokenIcon
       }
     );
 
@@ -588,6 +588,16 @@ async function registerRewards(loopTokenAddress, incentivesController, rewardAmo
   console.log('Registered reward deposit in incentivesController.');
 }
 
+
+async function registerVaults() {
+  const { VaultRegistry: vaultRegistry } = await loadDeployedContracts()
+  for (const [name, vault] of Object.entries(await loadDeployedVaults())) {
+    console.log(`${name}: ${vault.address}`);
+    await vaultRegistry.addVault(vault.address);
+    console.log('Added', name, 'to vault registry');
+  }
+}
+
 async function deployRadiant() {
   console.log('Deploying Radiant Contracts...');
   const signer = await getSignerAddress();
@@ -600,9 +610,7 @@ async function deployRadiant() {
     lpTokenAddress
   ] = await deployRadiantDeployHelper();
 
-  // Deploy Vault Registry
-  const vaultRegistry = await deployContract('VaultRegistry');
-  console.log('Vault Registry deployed to:', vaultRegistry.address);
+  
   const multiFeeDistribution = await deployProxy('MultiFeeDistribution', [], [
     loopToken,
     CONFIG.Tokenomics.MultiFeeDistribution.lockZap,
@@ -726,6 +734,7 @@ async function createPositions() {
   await deployCore();
   // await deployAuraVaults();
   await deployVaults();
+  await registerVaults();
   // await deployRadiant();
   // await deployGearbox();
   // await logVaults();
