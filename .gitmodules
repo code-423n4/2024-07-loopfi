@@ -22,3 +22,6 @@
 [submodule "lib/pendle-core-v2-public"]
 	path = lib/pendle-core-v2-public
 	url = https://github.com/pendle-finance/pendle-core-v2-public
+[submodule "lib/aave-address-book.git"]
+	path = lib/aave-address-book.git
+	url = https://github.com/bgd-labs/aave-address-book.git
