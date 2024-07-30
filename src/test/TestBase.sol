@@ -16,6 +16,8 @@ import {IPoolV3} from "@gearbox-protocol/core-v3/contracts/interfaces/IPoolV3.so
 import {ICDM} from "../interfaces/ICDM.sol";
 import {ICDPVault, ICDPVaultBase, CDPVaultConfig, CDPVaultConstants} from "../interfaces/ICDPVault.sol";
 import {CDPVault} from "../CDPVault.sol";
+
+import {PatchedDeal} from "./utils/PatchedDeal.sol";
 import {Flashlender} from "../Flashlender.sol";
 
 import {MockOracle} from "./MockOracle.sol";
@@ -64,6 +66,9 @@ contract TestBase is Test {
     uint256[] internal timestamps;
     uint256 public currentTimestamp;
 
+    PatchedDeal internal dealManager;
+    bool public usePatchedDeal = false;
+
     uint256 internal constant initialGlobalDebtCeiling = 100_000_000_000 ether;
 
     CreditCreator private creditCreator;
@@ -80,8 +85,9 @@ contract TestBase is Test {
         vm.warp(currentTimestamp);
         _;
     }
-
+    
     function setUp() public virtual {
+        dealManager = new PatchedDeal();
         setCurrentTimestamp(block.timestamp);
 
         createAccounts();
@@ -120,6 +126,11 @@ contract TestBase is Test {
     function createAndSetPoolQuotaKeeper() internal virtual {
         quotaKeeper = new PoolQuotaKeeperV3(address(liquidityPool));
         liquidityPool.setPoolQuotaKeeper(address(quotaKeeper));
+
+        voter = new MockVoter();
+        voter.setFirstEpochTimestamp(block.timestamp);
+        gauge = new GaugeV3(address(liquidityPool), address(voter));
+        quotaKeeper.setGauge(address(gauge));
     }
 
     function createStakingLpEth() internal virtual {
@@ -130,25 +141,15 @@ contract TestBase is Test {
     }
 
     function createGaugeAndSetGauge(address vault) internal virtual {
-        voter = new MockVoter();
-        voter.setFirstEpochTimestamp(block.timestamp);
-        gauge = new GaugeV3(address(liquidityPool), address(voter)); // set MockVoter
-        quotaKeeper.setGauge(address(gauge));
-        quotaKeeper.setCreditManager(address(token), address(vault));
-        gauge.addQuotaToken(address(token), 10, 100);
-        gauge.setFrozenEpoch(false);
-        vm.warp(block.timestamp + 1 weeks);
-        vm.prank(address(gauge));
-        quotaKeeper.updateRates();
+        address token_ = address(CDPVault(vault).token());
+        createGaugeAndSetGauge(vault, token_);
     }
 
-    function createGaugeAndSetGauge(address vault, address token) internal virtual {
-        voter = new MockVoter();
-        voter.setFirstEpochTimestamp(block.timestamp);
-        gauge = new GaugeV3(address(liquidityPool), address(voter)); // set MockVoter
-        quotaKeeper.setGauge(address(gauge));
-        quotaKeeper.setCreditManager(address(token), address(vault));
-        gauge.addQuotaToken(address(token), 10, 100);
+    function createGaugeAndSetGauge(address vault, address token_) internal virtual {
+        quotaKeeper.setCreditManager(address(token_), address(vault));
+        if (!gauge.isTokenAdded(address(token_))) {
+            gauge.addQuotaToken(address(token_), 10, 100);
+        }
         gauge.setFrozenEpoch(false);
         vm.warp(block.timestamp + 1 weeks);
         vm.prank(address(gauge));
@@ -186,6 +187,7 @@ contract TestBase is Test {
         flashlender = new Flashlender(IPoolV3(address(liquidityPool)), 0); // no fee
         liquidityPool.setCreditManagerDebtLimit(address(flashlender), type(uint256).max);
         vaultRegistry = new VaultRegistry();
+
     }
 
     function createCDPVault(
@@ -297,6 +299,7 @@ contract TestBase is Test {
             });
     }
 
+
     function getContracts() public view returns (address[] memory contracts) {
         contracts = new address[](5);
         contracts[0] = address(treasury);
@@ -304,5 +307,16 @@ contract TestBase is Test {
         contracts[2] = address(liquidityPool);
         contracts[3] = address(acl);
         contracts[4] = address(mockWETH);
+    }
+
+    function deal(address token_, address to, uint256 amount) virtual override internal {
+        if (usePatchedDeal) {
+            uint256 chainId = block.chainid;
+            vm.chainId(1);
+            dealManager.deal2(token_, to, amount);
+            vm.chainId(chainId);
+        } else {
+            super.deal(token_, to, amount);
+        }
     }
 }
