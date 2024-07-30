@@ -4,5 +4,6 @@ permit2/=lib/permit2/src/
 forge-std/=lib/forge-std/src/
 prb-proxy/=lib/prb-proxy/src/
 layerzerolabs/=lib/layerzerolabs/contracts/
+aave-address-book/=lib/aave-address-book/src/
 @gearbox-protocol/core-v3/contracts/=lib/core-v3/contracts/
 @gearbox-protocol/core-v2/contracts/=lib/core-v2/contracts/
