@@ -34,6 +34,9 @@
 ./src/test/integration/SwapAction.t.sol
 ./src/test/integration/Tokenomics.t.sol
 ./src/test/integration/TransferAction.t.sol
+./src/test/integration/PendleLPOracle.t.sol
+./src/test/integration/PositionAction20Pendle.t.sol
+./src/test/integration/PositionAction20Pendle.lever.t.sol
 ./src/test/unit/BalancerOracle.t.sol
 ./src/test/unit/CDPVault.t.sol
 ./src/test/unit/ChainlinkOracle.t.sol
@@ -47,3 +50,5 @@
 ./src/test/unit/Proxy.t.sol
 ./src/test/unit/StakingLP.t.sol
 ./src/test/utils/PermitMaker.sol
+./src/test/utils/PatchedDeal.sol
+./src/test/utils/ChainIds.sol
