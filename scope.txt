@@ -6,6 +6,7 @@
 ./src/VaultRegistry.sol
 ./src/oracle/BalancerOracle.sol
 ./src/oracle/ChainlinkOracle.sol
+./src/oracle/PendleLPOracle.sol
 ./src/proxy/BaseAction.sol
 ./src/proxy/ERC165Plugin.sol
 ./src/proxy/PoolAction.sol
@@ -14,6 +15,7 @@
 ./src/proxy/PositionAction4626.sol
 ./src/proxy/SwapAction.sol
 ./src/proxy/TransferAction.sol
+./src/proxy/PositionActionPendle.sol
 ./src/quotas/GaugeV3.sol
 ./src/quotas/PoolQuotaKeeperV3.sol
 ./src/quotas/QuotasLogic.sol
