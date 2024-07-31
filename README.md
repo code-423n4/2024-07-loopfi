@@ -172,6 +172,14 @@ _See [scope.txt](https://github.com/code-423n4/2024-07-loopfi/blob/main/scope.tx
 | /src/vendor/Imports.sol | ****| **** | 5 | |prb-proxy/PRBProxyRegistry.sol<br>@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol<br>@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol<br>permit2/interfaces/IAllowanceTransfer.sol|
 | **Totals** | **26** | **8** | **4562** | | |
 
+Files added to the scope after the start of the contest:
+
+| File   | SLOC | 
+| ------ | ---- |
+| /src/oracle/PendleLPOracle.sol   | 75 |
+| /src/proxy/PositionActionPendle.sol   | 44 |
+| **Totals** | **119** |
+
 ### Files out of scope
 
 _See [out_of_scope.txt](https://github.com/code-423n4/2024-07-loopfi/blob/main/out_of_scope.txt)_
