@@ -1,0 +1,1690 @@
+==============================================================
+Guild: Code4rena
+Channel: ARCHIVE-PUBLIC / loop-jul25
+==============================================================
+
+[07/25/2024 10:01] kartoonjoy (pinned)
+👋 Hello and welcome to the audit channel for the $100,000 in USDC **LoopFi** audit!
+
+📆 Audit opens 07/25/2024 20:00 (20:00 UTC) and runs through 08/15/2024 20:00 (20:00 UTC) (21 days).
+
+Please give a warm welcome to the LoopFi team, particularly @Tenet | Loop, @poinT and @anonme, who will be available for questions either here in the channel or via a PRIVATE thread in the CET timezone(s). 
+
+🤖 **Documentation bot assistance:** For general questions about the codebase, give our documentation bot a try, by tagging `@Docs Wolf` in any thread (private or public) and asking your question. The bot will make its best attempt to answer based on the codebase and documentation, and link you to relevant resources.  
+
+We'll be posting relevant links, documentation, etc. here, so if you intend to participate in this audit, consider enabling notifications for this channel. 🐺 ⏰
+
+Audit Page: https://code4rena.com/audits/2024-07-loopfi#top
+
+
+[07/25/2024 10:01] kartoonjoy
+Pinned a message.
+
+
+[07/25/2024 13:02] tenetloop
+❤️
+
+{Reactions}
+❤️ (6) 👍 (5) 🎉 (2) praisethesun (3) 
+
+[07/25/2024 20:03] 0xspryon
+Hi all, will there be a code walkthrough video?
+
+
+[07/25/2024 20:10] y0ng0p3
++1
+
+{Reactions}
+1️⃣ (11) 
+
+[07/26/2024 02:45] mylifechangefast.eth_70767
+Nice contracts.. But lot of bugs to be found
+
+{Reactions}
+4739_Skeletor (3) 
+
+[07/26/2024 05:54] ali_shehab.
+why?
+
+
+[07/26/2024 08:16] fastchecker_27
+@Tenet | Loop Hello everyone, well what is difference of scopes of loopfi-bounty and this?
+
+
+[07/26/2024 12:07] wolfyyy___
+https://discordapp.com/channels/810916927919620096/1250438898639966331/1265708383307038833
+
+
+[07/26/2024 17:43] anirruth
+Are all the files in scope already audited? If yes, are the bugs fixed?
+
+
+[07/26/2024 19:13] donkicha
+Is the `VAULT_CONFIG_ROLE` trusted?
+
+
+[07/26/2024 19:14] donkicha
+I noticed that in the README, it is noted that all of the admin roles are trusted, but to be sure...
+
+
+[07/27/2024 19:00] novamanbg
+Hi what do these comments mean? // U:[LP-13B]
+
+{Reactions}
+👍 
+
+[07/27/2024 22:31] mylifechangefast.eth_70767
+Where is everyone 🙃
+
+
+[07/27/2024 22:31] mylifechangefast.eth_70767
+Sponsors nor security dudes are here
+
+{Reactions}
+😂 
+
+[07/27/2024 22:32] mylifechangefast.eth_70767
+@anonme @poinT @Tenet | Loop please check PT
+
+
+[07/27/2024 22:50] asui0944
+This one's dry. 
+Maybe because they postponed the date many times.
+
+
+[07/27/2024 22:54] asui0944
+@Tenet | Loop  any previous audits other than the ones done by watchpug??
+
+
+[07/27/2024 23:28] ustas.eth
+It's weekend, they are probably resting
+
+{Reactions}
+✅ (2) 💯 
+
+[07/28/2024 07:48] kartoonjoy
+🤖 **Documentation bot assistance:** For general questions about the codebase, give our documentation bot a try, by tagging `@Docs Wolf` in any thread (private or public) and asking your question. The bot will make its best attempt to answer based on the codebase and documentation, and link you to relevant resources.
+
+
+[07/28/2024 07:54] mylifechangefast.eth_70767
+Just for more validation🙃
+
+
+[07/28/2024 16:46] mgnfy_view
+Started a thread.
+
+
+[07/28/2024 18:25] novamanbg
+Could you give us more information about the contracts i the quotas folder and their role in the LoopFi protocol?
+
+{Reactions}
+👍 (2) 
+
+[07/29/2024 12:54] tenetloop
+@anonme
+
+
+[07/29/2024 13:53] anonme23
+quotas contracts are used to charge an extra borrowing rate specific to each `CDPVault` borrowing from the `PoolV3` which is ranged between a min and a max set by the DAO, vote for now is controlled by the DAO but will be voted by users in the future
+
+{Reactions}
+✅ (2) 
+
+[07/29/2024 14:53] 0xcwalter
+@anonme could you please check DMs
+
+
+[07/29/2024 17:00] trebien (pinned)
+Hey Wardens, I pulled in the wrong commit and accidentally omitted a couple of small pendle contracts (total 100 sloc) that were supposed to be in scope. I've decided to add this in scope given that we're still pretty early into the competition and the sponsor would like this to be included. Please accept my apologies for missing this and for the late addition.
+
+Stay tune for updates from @Jay | C4 and @kartoonjoy | C4🎇🎇
+
+
+[07/29/2024 17:01] itsmetechjay
+Pinned a message.
+
+
+[07/29/2024 17:04] ebok21
+Are findings from slither that might actually be crucial and proven in scope? (since no-one takes slither seriously)
+
+
+[07/29/2024 17:10] ebok21
+@Jay | C4 @kartoonjoy | C4🎇🎇
+
+
+[07/29/2024 17:16] itsmetechjay
+Started a thread.
+
+
+[07/29/2024 18:06] parthmandale
+Started a thread.
+
+
+[07/29/2024 22:39] konfushon
+gm, 
+which contract will lenders interact with first when depositing ETH to mint lpETH?
+
+
+[07/30/2024 03:24] mgnfy_view
+CDPVault
+
+{Reactions}
+🧐 (2) 
+
+[07/30/2024 06:11] 0xarmedgoose
+hey! when users should be interacting with Proxy (PositionAction* etc) contracts instead of directly interacting with the CDP Vault? what's the use case?
+
+
+[07/30/2024 12:56] kirobrejka_80610
+leveraging a position for example
+
+{Reactions}
+👍 
+
+[07/30/2024 13:10] modey__
+Traversing this codebase is a bit tricky
+It’s not immediately clear
+
+{Reactions}
+💯 (7) 
+
+[07/30/2024 13:21] elcid2000
+Isn't it PoolV3? In the readme says it deals with WETH. And Im not seeing how the user gets lpETH on callin deposit in CDPVault
+
+
+[07/30/2024 16:12] emmac002
+Which token price to get from the Chainlink Oracle WETH/USDC? And which Balancer pool Id does the protocol use?
+
+
+[07/30/2024 21:29] kartoonjoy
+Wardens: the changes have now been merged. Thanks!
+
+{Reactions}
+💪 thankyou 
+
+[07/30/2024 22:24] mylifechangefast.eth_70767
+I've waited no reply
+
+
+[07/31/2024 04:58] a_kalout
+Started a thread.
+
+
+[07/31/2024 09:13] boraichodrunkenmaster
+Saw it today on GitHub was wondering 🤔
+
+
+[07/31/2024 09:15] boraichodrunkenmaster
+User does not mint LpEth when depositing on CDPVault the deposit function on CDPVault allows a user to deposit collateral
+
+{Reactions}
+✅ 
+
+[07/31/2024 09:18] boraichodrunkenmaster
+From What I understand there would be many CDPVaults and one Weth pool
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/IMG_0836-56466.jpg
+
+{Reactions}
+👍 (6) 
+
+[07/31/2024 11:14] aka_bug_killer
+Hi there, I'm wondering if the contracts are deployed on the mainnet? Should frontrunning/backrunning/sandwiching be taken into consider?
+
+
+[07/31/2024 11:16] aka_bug_killer
+And the action contracts should be used in delegatecalls from the user proxies. Only the flashloan callback is used by itself, am I understanding it correctly?
+
+
+[07/31/2024 20:15] itsmetechjay (pinned)
+ℹ️ Wardens, per this note, the additional contracts have been added, and scope updated:
+- the [PR with the additional contracts](https://github.com/code-423n4/2024-07-loopfi/pull/1)
+- a [PR with updates to the in-scope and out-of scope files](https://github.com/code-423n4/2024-07-loopfi/pull/2)
+- an [update to the README that includes the additional scope](https://github.com/code-423n4/2024-07-loopfi/commit/57871f64bdea450c1f04c9a53dc1a78223719164).
+
+{Reactions}
+👍 (3) 
+
+[07/31/2024 20:16] itsmetechjay
+Pinned a message.
+
+
+[07/31/2024 20:26] novamanbg
+the files that were already in scope are unchange right
+
+
+[07/31/2024 20:32] biasedmerc
+Yes, you can view the scope changes in the linked PR. Just 2 files added
+
+
+[07/31/2024 20:33] itsmetechjay
+No changes to the files in scope. Just the adds. Correct.
+
+{Reactions}
+✅ (2) 
+
+[08/01/2024 02:53] gd.eth
+Just curious 👀 
+if making changes to the scope during the contest would consider extending the deadline appropriately?
+
+{Reactions}
+☝️ (2) 
+
+[08/01/2024 04:14] anonimoux2k
+Hi @Jay | C4 , I have a question. Is my finding considered valid if I define severity categorization wrong? For example 1 High risk, but I mark it as Medium risk
+
+
+[08/01/2024 04:17] anonimoux2k
+Assuming the content of this finding submission is indeed a security issue, the only fault is the wrong estimating risk.
+
+
+[08/01/2024 04:35] gr34t.l4k3
+Yes
+
+{Reactions}
+🙌 (2) 
+
+[08/01/2024 12:09] elcid2000
+@Tenet | Loop @poinT @anonme Hi! The `treasury` address in `PoolV3` is supposed to be the `StakingLPeth` contract, right?
+
+
+[08/01/2024 14:22] itsmetechjay
+No extension in this case. The audit end date will remain the same.
+
+{Reactions}
+✅ (2) 
+
+[08/01/2024 17:27] justbuks
+@Tenet | Loop  @poinT please what are the cumulative parameters in the position struct
+
+
+[08/01/2024 17:37] modey__
+I think Indexes for calculating interest
+
+
+[08/01/2024 18:00] silver__eth
+please whats the DLP?
+
+
+[08/01/2024 18:10] silver__eth
+@poinT  @Tenet | Loop any context on which LRTs the protocol support ?
+
+
+[08/01/2024 18:22] donkicha
+You mean the dLP tokens or?
+
+
+[08/01/2024 18:27] silver__eth
+yup
+
+
+[08/01/2024 19:33] scoolj
+It is the official governance Token
+
+
+[08/01/2024 19:41] donkicha
+@silver_eth You can read the docs for such things.
+
+
+[08/01/2024 19:44] laxmiprasad
+Can someone explain what are these comments actually telling us 
+//U:[LP-2A,2B,5,6]
+
+{Reactions}
+🙌 
+
+[08/01/2024 19:45] laxmiprasad
+Found them while going through poolV3
+
+
+[08/01/2024 19:53] laxmiprasad
+also it would be great if someone explains what is this ray used in poolv3?
+
+
+[08/01/2024 19:55] laxmiprasad
+@poinT @Tenet | Loop
+
+
+[08/01/2024 21:05] elcid2000
+those comments link lines of code to their respective test
+
+{Reactions}
+👍 
+
+[08/02/2024 10:11] emmac002
+Hi all, any idea where can I find the source code of the iAuraPool.sol interface functions?
+
+
+[08/02/2024 11:04] guy_in0xnito
+@Tenet | Loop 
+/
+@poinT 
+Mentioned you in PT
+kindly check when you have time
+
+{Reactions}
+☝️ 
+
+[08/02/2024 12:36] konfushon
+well, akchually, lenders interact with `PoolV3.sol` and borrowers interact with `CDPVault.sol`. Their logic is stipulated in the said contracts
+
+{Reactions}
+✅ 
+
+[08/03/2024 06:02] joseph__hpesoj
+RAY = 1e27.
+You can find out about others here: https://x.com/gkrastenov/status/1808436695408238717?t=F0w9-BVTqEEb2XxJLbD0-g&s=19
+
+{Embed}
+https://twitter.com/gkrastenov/status/1808436695408238717?t=F0w9-BVTqEEb2XxJLbD0-g&s=19
+gkrastenov (@gkrastenov) on X
+1/5🧵
+
+What are the WAD, RAY and RAD constant variables and when are they used?
+
+Details below👇
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/GRjW5PcbYAAGzWb-C0D37.png%3Alarge
+Twitter
+
+{Reactions}
+👍 (2) 
+
+[08/03/2024 08:02] donkicha
+The bot this time is terrible!
+
+
+[08/03/2024 08:13] emmac002
+Confused about the staking path, an user stakes through the MultiFeeDistribution.sol, and unstakes through the StakingLPEth.sol?
+
+
+[08/03/2024 08:20] konfushon
+agreed.
+
+
+[08/03/2024 08:23] 0x04bytes
+Hello friends, is the configuration in `config.js` the actual configuration that will be used to deploy contracts on mainnet?
+
+
+[08/03/2024 08:38] 0x04bytes
+As far as I know, the StakingLPEth is used to earn lpEth accumulated from interest passively. The token staked in MultiFeeDistribution is the dLP token. In order to get the dLP token, the stakers can use their minted lpEth token as liquidity in balancer's 80LOOP-20lpEth pool. After locking their dLP token for a certain period of time, the stakers can claim their rewards.
+
+{Reactions}
+👍🏻 
+
+[08/03/2024 09:28] novamanbg
+Sponsor told me that values such as liquidation discount and penalties have not been decided yet
+
+
+[08/03/2024 11:19] silver__eth
+@Tenet | Loop @poinT  could you provide a link to the  interestRateModel contract just to have an idea on how  baseInterestRate is calculated
+
+
+[08/03/2024 12:09] kmm77
+You can find it in lib/core-v2/contracts/pool/LinearInterestRateModel.sol
+
+
+[08/03/2024 14:39] silver__eth
+thanks
+
+
+[08/03/2024 14:48] silver__eth
+v2 not v3?
+
+
+[08/03/2024 15:13] kmm77
+I saw it in v2
+
+
+[08/03/2024 15:27] silver__eth
+its also on v3
+
+
+[08/03/2024 16:00] mylifechangefast.eth_70767
+Please kind confused
+
+
+[08/03/2024 16:00] mylifechangefast.eth_70767
+Kinda
+
+
+[08/03/2024 16:01] mylifechangefast.eth_70767
+When erc20 behavior is out of scope and a behavior contract is in scope
+
+
+[08/03/2024 16:01] mylifechangefast.eth_70767
+How do we go about it
+
+
+[08/03/2024 16:02] mylifechangefast.eth_70767
+Let's say upgradability is the behavior and in the section of in scope... An upgradability is in scope
+
+
+[08/03/2024 16:02] mylifechangefast.eth_70767
+Should it be still be considered???
+
+{Reactions}
+👆 
+
+[08/03/2024 20:32] sungyuk1
+In poolv3 what is the is the difference between _baseInterestRate and _baseInterestIndexLU? I get that it is suppose to be a Cumulative base interest index, but what does that mean? Is it a weighted average of all the baseInterestRates?
+
+
+[08/03/2024 20:33] sungyuk1
+/// @dev Current base interest rate in ray
+    uint128 internal _baseInterestRate;
+    /// @dev Cumulative base interest index stored as of last update in ray
+    uint128 internal _baseInterestIndexLU;
+
+
+[08/04/2024 02:06] tonchi4583
+What if a contract using `@openzeppelin/contracts/security/ReentrancyGuard.sol'` import because openzeppelin moved ReentrancyGuard.sol to utils? is this can be an issue
+
+
+[08/04/2024 02:33] tonchi4583
+Can anyone answer this question??
+
+
+[08/04/2024 03:37] 0xpiken
+No. Judge will upgrade it
+
+
+[08/04/2024 03:43] anonimoux2k
+Another similar question, is the submission valid if I misidentify the Assessed type (Issue type)? Thanks a lot
+
+
+[08/04/2024 06:44] donkicha
+I have no words...
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/Screenshot_2024-08-04_094344-71C85.png
+
+{Reactions}
+😂 (5) 
+
+[08/04/2024 08:46] infectedfuture
+nope this isn't taken into account (not sure if its used rn tbh, but probably used to categorize issues for first judging pass)
+
+
+[08/05/2024 06:34] guy_in0xnito
+@poinT mentioned you in PT sir 
+Kindly check when available 
+Thanks
+
+
+[08/05/2024 07:03] 0xmuxyz
+@Docs Wolf 
+Could you explain what are the ChefIncentivesController.sol and EligibilityDataProvider.sol used for?
+
+
+[08/05/2024 08:11] novamanbg
+@poinT  the vote function will be called by a contract which is currently out of scope right?
+
+
+[08/05/2024 12:02] justbuks
+@poinT @Tenet | Loop, is it only pendlelp tokens that will be used as collateral or other lrts
+
+{Reactions}
+👀 (3) 
+
+[08/05/2024 13:44] mylifechangefast.eth_70767
+:nice:
+
+
+[08/05/2024 14:23] kirobrejka_80610
+https://docs.loopfi.xyz/the-protocol/looping-leveraged-restaking/supported-strategies
+
+
+[08/05/2024 14:23] kirobrejka_80610
+These are the supported strats
+
+
+[08/05/2024 18:29] boraichodrunkenmaster
+DLP token out of scope right?
+
+{Reactions}
+❓ (4) 
+
+[08/06/2024 00:02] sungyuk1
+@Docs Wolf What is the interest index value mentioned in QuotasLogic
+
+
+[08/06/2024 00:43] kartoonjoy
+Please ask your question to the docs wolf in a private or public thread. Thanks
+
+
+[08/06/2024 06:14] emmac002
+Are you all able to run the .unit.t.sol?
+
+
+[08/06/2024 06:31] daniel526
+@anonme @poinT @Tenet | Loop please check private thread!
+
+
+[08/06/2024 09:20] novamanbg
+@anonme @poinT @Tenet | Loop  could you please check PT
+
+
+[08/06/2024 09:45] kmm77
+@anonme When possible please check PT
+
+
+[08/06/2024 13:09] kartoonjoy
+I promise that I don't know the answer
+
+{Reactions}
+🤣 (2) 
+
+[08/06/2024 13:10] kartoonjoy
+Also, the Docs bot has to be engaged in a thread. No need to tag me in it though.
+
+
+[08/06/2024 13:21] chinmayf
+what are these tags => U: CM-11 like the one here https://github.com/code-423n4/2024-07-loopfi/blob/57871f64bdea450c1f04c9a53dc1a78223719164/src/CDPVault.sol#L428
+
+
+[08/06/2024 14:00] elcid2000
+.
+
+{Reactions}
+👍🏽 
+
+[08/06/2024 19:22] ladboy233
+what is the entry point for the contract?
+
+
+[08/06/2024 19:23] ladboy233
+I see position actions calls vault deposit / withdraw,
+
+
+[08/06/2024 19:23] ladboy233
+but the position action function is guarded by onlyDelegateCall modifier...
+
+
+[08/06/2024 19:23] ladboy233
+so who calls position action?
+
+
+[08/06/2024 20:24] olanre_waju
+CDPVault.sol
+
+
+[08/06/2024 20:39] ladboy233
+but CDPVault.sol has this check so only the permissioned contract can call deposit
+
+
+[08/06/2024 20:39] ladboy233
+```solidity
+    function modifyCollateralAndDebt(
+        address owner,
+        address collateralizer,
+        address creditor,
+        int256 deltaCollateral,
+        int256 deltaDebt
+    ) public {
+        if (
+            // position is either more safe than before or msg.sender has the permission from the owner
+            ((deltaDebt > 0 || deltaCollateral < 0) && !hasPermission(owner, msg.sender)) ||
+            // msg.sender has the permission of the collateralizer to collateralize the position using their cash
+            (deltaCollateral > 0 && !hasPermission(collateralizer, msg.sender)) ||
+            // msg.sender has the permission of the creditor to use their credit to repay the debt
+            (deltaDebt < 0 && !hasPermission(creditor, msg.sender))
+        ) revert CDPVault__modifyCollateralAndDebt_noPermission();
+
+```
+
+
+[08/06/2024 20:40] ladboy233
+yeah I still wonder what is the permissionless function to trigger deposit if the position action function is guarded by onlyDelegateCall modifier
+
+
+[08/06/2024 20:41] olanre_waju
+start with deposit, withdraw, borrow, repay, liquidation....that's the flow
+
+
+[08/06/2024 20:48] a_kalout
+hey, you'll be "delegately" calling these functions from your proxy contract, check tests in `src/test/integration/PositionAction20.t.sol`, your proxy contract would be the owner of your position
+
+
+[08/06/2024 21:26] tamoghna.
+I am not able to build the project properly, any suggestions would be helpful
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/image-C62D2.png
+
+
+[08/06/2024 21:28] tamoghna.
+even trying to install OZ gives error
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/image-4F53F.png
+
+
+[08/06/2024 23:27] itsmetechjay
+please activate Docs Wolf in a public or private thread.
+
+
+[08/07/2024 11:01] .nnez
+Makes sense. Did the sponsor state anywhere which proxy contract they're gonna use?
+From that test file, can we safely assume that it's gonna be PRBProxy?
+
+
+[08/07/2024 11:06] a_kalout
+I don't think they did (or maybe they did and I missed it), I just assumed that it's PRBProxy and went along with it
+
+{Reactions}
+👍 
+
+[08/07/2024 11:09] .nnez
+Can you provide more information regarding this? @Tenet | Loop
+
+
+[08/07/2024 12:02] kartoonjoy
+Hi. No, that scope change was made pretty early on and we still have 8 days left.
+
+{Reactions}
+👍 (4) 
+
+[08/07/2024 16:11] 0xhacksmithh
+@poinT Hi sir, made a PT, pls check when you have free time
+
+
+[08/07/2024 16:23] mylifechangefast.eth_70767
+@Tenet | Loop please check PT
+
+
+[08/07/2024 16:44] boraichodrunkenmaster
+Makes sense
+
+
+[08/08/2024 07:04] 0x0shephard
+Scope addition is pendleLPOracle.sol?
+
+
+[08/08/2024 07:23] yashar0x
+@Tenet | Loop sir would you please check the PT? 🙏
+
+
+[08/08/2024 07:27] 0xspearmint
+@anonme please check my private thread. Thank you.
+
+
+[08/08/2024 09:26] pkqs90
+Want to double check - the MultiFeeDistribution.sol is a fork of RadiantV2 rewards, which supports bounty, compounding and lpZapping. MultiFeeDistribution.sol also has a bunch of code related to those features, but seems LoopFi does not support them, as there is no related code for main logic. So these features are out of scope? @Tenet | Loop @anonme
+
+{Reactions}
+☝️ (5) 
+
+[08/08/2024 23:27] mylifechangefast.eth_70767
+No replies
+
+
+[08/08/2024 23:27] mylifechangefast.eth_70767
+tch
+
+
+[08/09/2024 11:54] .nnez
+How can we determine if each finding from WatchPug is a known issue (with no fix yet) or if it has already been addressed in the contest repo, considering we don't have access to the codebase that WatchPug audited?
+
+{Reactions}
+👍 (2) 
+
+[08/09/2024 16:05] ali_shehab.
+not sure, but I think anything other than report 5 is fixed
+
+
+[08/09/2024 16:06] .nnez
+Yeah, the problematic one is the number 5 note
+
+
+[08/09/2024 18:56] infectedfuture
+https://github.com/code-423n4/2024-07-loopfi?tab=readme-ov-file#automated-findings--publicly-known-issues
+> **Automated Findings / Publicly Known Issues**
+> [...]
+> Note for C4 wardens: Anything included in this Automated Findings / Publicly Known Issues section is considered a publicly known issue and is ineligible for awards.
+> **All of the previous findings from the previous audit reports from Watchpug**
+
+
+[08/09/2024 18:58] infectedfuture
+even if it isn't fixed yet, this is known issue
+may be valid if a fix has been applied but issue is still present
+
+{Reactions}
+✅ 
+
+[08/09/2024 18:58] kmm77
+I think this information can be helpful?
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/image-C5065.png
+
+{Reactions}
+👍 (6) 
+
+[08/09/2024 19:00] .nnez
+Thanks @infect3d @web3km
+
+{Reactions}
+🫶 (6) 
+
+[08/10/2024 13:05] silver__eth
+@poinT @Tenet | Loop pls check pt
+
+
+[08/11/2024 10:34] yashar0x
+@poinT @Tenet | Loop @anonme 
+Would you please check the PT? 🙏
+
+
+[08/11/2024 13:35] konfushon
+has the LoopFi team, particularly @Tenet | Loop @poinT @anonme answered any of the auditor's private threads or DMs?
+
+
+[08/11/2024 16:06] yashar0x
+No, none of my questions have been answered
+
+
+[08/11/2024 16:09] konfushon
+same with me. I've shoot multiple DMs with no answer 
+makes me wonder 🤔 
+we're cooked. Feels like we're alone in this audit. Even though I'm not an elite auditor, experience with LoopFi so far is pretty shitty!
+
+CC: @kartoonjoy | C4🎇🎇
+
+
+[08/11/2024 18:45] crypticdefense
+@anonme has been answering my questions via private thread
+
+{Reactions}
+👍 
+
+[08/11/2024 18:59] falcurity
+Brilliant
+
+
+[08/11/2024 19:16] kmm77
+@anonme has been answering my questions regularly aswell
+
+{Reactions}
+👍 
+
+[08/11/2024 19:17] kartoonjoy
+Hi. Have you engaged the docswolf where necessary / possible? Also, I believe the sponsor has been responsive although, it's possible that they may not have been available this weekend. Our team can ping them tomorrow (Monday), as needed, if no one is getting responses.
+
+Last thing, we ask that you keep communication professional, particularly in these audit channels. We appreciate your understanding. Thanks!
+
+
+[08/11/2024 19:36] konfushon
+Yes, I have tried the bot. Been using it since the audit started. It's actually pretty good. But somethings I believe need the team's intervention and explaining like quotas.
+
+
+[08/11/2024 19:38] konfushon
+It's been 12 days and they haven't answered any of my DMs. So yeah, would really appreciate it if you ping them
+
+
+[08/11/2024 19:47] emmac002
+poinT did answer my questions via private thread. DMs are not allowed,  so create a private thread and ping them there is the correct way.
+
+{Reactions}
+thankyou 
+
+[08/11/2024 19:50] konfushon
+I've opened 3 PTs and pinged them there and closed them after 3 days of not getting an answer. But hey, lemme stop whining and do that. Maybe DMs weren't the best way to approach them. Lemme open those PTs then
+
+{Reactions}
+thankyou (2) 
+
+[08/12/2024 07:25] lavizrap_
+Started a thread.
+
+
+[08/13/2024 11:21] parthmandale
+@anonme please do check my private thread. Thank you.
+
+
+[08/13/2024 13:26] evokid
+Hey @anonme can you please check my private thread? Thanks 🙏
+
+{Reactions}
+👀 
+
+[08/13/2024 13:58] .nnez
+@poinT @Tenet | Loop Could you check my private thread please
+
+
+[08/13/2024 17:58] kmm77
+@anonme Can you please check my PT. Thank you
+
+
+[08/13/2024 21:25] silver__eth
+@anonme pls what is the purpose of the chefIncentive controller and was anything changed from the original forked code?
+
+
+[08/15/2024 12:41] evokid
+Thank you @anonme  for answering my questions 🙏
+
+
+[08/15/2024 14:24] trtrth
+@anonme @poinT @Tenet | Loop please help to check my private thread. Thanks !
+
+
+[08/15/2024 20:02] C4
+**🚨 AUDIT ALERT**
+
+@🐺Wardens The **LoopFi** audit is now closed! Huge thanks to everyone who participated 🔍, whether you submitted a finding or not.
+
+What's next: The sponsor team and judge will review the findings over the next couple of weeks. Feel free to ping a Civics-Admin if you have questions along the way!
+
+
+[08/15/2024 20:11] novamanbg
+how many submissions
+
+
+[08/15/2024 20:13] 0xpopeye
+113+743
+
+
+[08/15/2024 20:30] novamanbg
+113 qa?
+
+
+[08/15/2024 20:40] kmm77
+743 in validation repo, 133 in findings repo
+
+{Reactions}
+✅ (2) 
+
+[08/16/2024 03:39] chinmayf
+Why are they separate ?
+
+{Reactions}
+👀 
+
+[08/16/2024 07:21] kmm77
+
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/image-E7137.png
+
+{Reactions}
+👍🏽 (2) 
+
+[08/16/2024 08:39] yoona_yay_80694
+Usually in long contests like this, is that number considered alot, average or below average? 🤔
+
+
+[08/16/2024 08:41] donkicha
+I think below average
+
+
+[08/19/2024 08:45] trtrth
+a hard contest, isnt it ?
+
+{Reactions}
+💯 (4) 
+
+[08/19/2024 12:05] 0xsorrynotsorry
+one should have a gigabrain to remember all the complexity in the codebase.
+And there are many of them in this channel now 🔥 🫡
+
+{Reactions}
+❤️ (5) 
+
+[08/19/2024 13:27] .nnez
+I've heard a tale that a certain someone can literally recall the whole codebase by hand.
+
+
+[08/19/2024 14:20] 0xsorrynotsorry
+I wouldnt be surprised 🙂
+
+{Reactions}
+😆 
+
+[08/26/2024 00:56] yoona_yay_80694
+Js curious how's the progress now? 🫠😆 Is it currently in the PJQA phase?
+
+
+[08/26/2024 10:59] cloudellie
+This audit received a high volume of submissions, so the sponsor team is still reviewing them and judging has not yet begun.
+
+{Reactions}
+👍 (6) 
+
+[08/28/2024 15:14] yoona_yay_80694
+(abit new to c4's procedures 😅 ) is the sponsor team review phase after validators finish filtering the validation repo or before that?
+
+
+[08/28/2024 15:22] ali_shehab.
+after
+
+
+[09/02/2024 16:59] a_kalout
+Hello! PJQA hasn't started and I've realized there aren't any updates on the issues in the findings repo, is this taking longer than usual?
+
+
+[09/02/2024 17:08] 0xhelium
+#⭐・sr
+
+
+[09/02/2024 18:21] .nnez
+Yeah, my guess is that sponsors are still reviewing all issues in finding repo.
+
+{Reactions}
+thankyou 
+
+[09/03/2024 02:03] yoona_yay_80694
+Btw what's the reason behind not letting judging and sponsor review happen at the same time?
+
+Isn't the judge decision and sponsor decision like 2 different things that doesn't even agree with each other sometimes? 😂
+
+
+[09/03/2024 08:36] cloudellie
+Sponsors have the most context on their code base. That context is often critical to the judge’s ability to judge more nuanced issues.
+
+
+[09/03/2024 08:38] yoona_yay_80694
+ok true, that makes sense, Thanks 👍
+
+{Reactions}
+hi5 
+
+[09/08/2024 10:18] laxmiprasad
+@CloudEllie will the results ever be out real soon ?
+
+
+[09/08/2024 10:28] cloudellie
+The sponsors are still reviewing the submissions, due to the high volume. Judging has not yet started.
+
+{Reactions}
+😐 (23) 
+
+[09/10/2024 08:14] novamanbg
+Are there any deadlines for sponsor’s review and judging?
+
+
+[09/10/2024 10:12] daniel526
+Alright, this is taking longer than me explaining reentrancy attacks to my cat
+
+
+[09/10/2024 11:15] oxtenma
+sponsors reviewing 2 issues everyday.. will take 450 days to complete sponsor review of 900 submissions this way 🤣
+
+{Reactions}
+kewk (12) 
+
+[09/10/2024 13:06] ali_shehab.
+Isn't 900 issues normal for such a codebase?
+
+
+[09/10/2024 14:31] oxtenma
+Yeah normal but sponsor review isn't normal I think haha
+
+{Reactions}
+😂 (3) 
+
+[09/10/2024 20:24] thebrittfactor
+We've been in contact with the sponsor team and they are working through the issues. We appreciate your patience! 🙏
+
+{Reactions}
+❤️ (5) 
+
+[09/14/2024 18:33] laxmiprasad
+@thebrittfactor | C4 - Away can you guys atleast tell a rough estimation on how much time it will take.
+
+{Reactions}
+👍 (4) 
+
+[09/15/2024 06:43] novamanbg
+Yep, it has now been one month since the contest ended.
+
+
+[09/15/2024 14:40] kmm77
+Sponsor gave response to only 1/3 of the issues 😬
+
+{Reactions}
+😡 (4) 
+
+[09/15/2024 15:29] novamanbg
+If this is true does it mean to expect the results in two months from now?
+
+
+[09/15/2024 15:33] 4gontuk
+
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/image0-B92BD.gif
+
+
+[09/15/2024 15:35] kmm77
+I am not sure I last checked on Friday and since then they only gave response to only 2 issues
+
+
+[09/15/2024 15:36] kmm77
+by reponse I mean either adding acknowledged,accepted or disputed label to the findings
+
+
+[09/15/2024 18:28] silver__eth
+laughs in given up 
+whenever the results comes out i guess, i dont care anymore🫠
+
+
+[09/17/2024 04:15] daniel526
+This one is really taking longer
+
+
+[09/17/2024 07:26] afriauditor
+so a simple maths to keep ur mind at ease
+There are 185 issues in finding repo and sponsorship reviewed 1/3
+So approximately 61 issues in the last 30 days. Thats a rate of 2 findings per day. 
+2/3 of findings left using current rate should take another 60 days.
+So we talking 17th November.
+Judging should start by 17th November. And my guess is PJQA  first week of December.
+
+Numbers dnt lie fam😅
+
+{Reactions}
+💀 (2) 4739_Skeletor 
+
+[09/17/2024 08:18] novamanbg
+@thebrittfactor | C4 - Away is everything ok in the judging?
+
+
+[09/17/2024 09:21] boraichodrunkenmaster
+That’s Crazy
+
+
+[09/17/2024 09:45] pascal9476
+Didn’t participate in this one but 
+Sponsors have to review issues before judging starts ?
+
+
+[09/17/2024 09:48] pascal9476
+Yup my question too, do judges look at sponsor discarded issues ?
+
+
+[09/17/2024 10:35] 0xsorrynotsorry
+judges check everything. many times the discarded issues are confirmed to be vulns by the judge verdict with a detailed reasoning.
+
+{Reactions}
+☝️ 😺 (2) hi5 (2) 👍 
+
+[09/17/2024 12:07] cloudellie
+We're aware this one is moving slowe than usual, and are doing our best to unblock it. Appreciate everyone's continued patience 🙏
+
+{Reactions}
+code4rena (2) hi5 (2) 
+
+[09/19/2024 16:11] infectedfuture
+sponsor confirming invalid findings : they decided to speedrun the judging, I suppose that's great ? 😆
+
+
+[09/19/2024 16:12] infectedfuture
+estimated PJQA time >> 2 months
+
+{Reactions}
+💔 (2) 😂 
+
+[09/19/2024 22:16] sungyuk1
+Does code4rena not provide feedback for why a finding was not considered valid?
+
+
+[09/19/2024 22:17] sungyuk1
+Found some gas findings that were not accepted and would like to know why just for learning purposes
+
+
+[09/20/2024 04:32] daniel526
+chill judging hasn't even started.
+
+
+[09/20/2024 11:42] sungyuk1
+Haha I’m not upset or anything. I saw that the report was out, so my guess was that the judging has finished
+
+
+[09/20/2024 11:56] oxtenma
+Report was out? Where?
+
+
+[09/20/2024 11:57] oxtenma
+Oh there was another contest in the past.
+
+
+[09/20/2024 11:57] pkqs90
+i'm pretty sure during pjqa i will need to read the codebase all over again 💀
+
+{Reactions}
+😂 (12) 
+
+[09/20/2024 12:22] 0xsorrynotsorry
+You don't need it 🫡
+
+{Reactions}
+thisisfine ❤️ 
+
+[09/23/2024 13:13] novamanbg
+Any updates?
+
+{Reactions}
+👀 (4) ☝️ 
+
+[09/24/2024 07:21] infectedfuture
+almost all issues have been reviewed by the sponsor (>95%)
+
+{Reactions}
+thankyou (3) 
+
+[09/24/2024 20:09] 4gontuk
+https://tenor.com/view/forrest-gump-tom-hanks-bearded-gif-11952701
+
+{Embed}
+https://tenor.com/view/forrest-gump-tom-hanks-bearded-gif-11952701
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/forrest-gump-tom-hanks-246EC.png
+
+{Reactions}
+😂 (8) 
+
+[09/25/2024 21:02] olanre_waju
+New fear unlocked: number of valid findings might overflow💀
+
+{Reactions}
+👀 🙁 
+
+[09/25/2024 21:05] 4gontuk
+how much?
+
+
+[09/25/2024 21:06] olanre_waju
+Not permitted to disclose
+
+{Reactions}
+✅ (2) 
+
+[09/26/2024 16:08] .nnez
+It's gonna be the first contest where a solo might only get you 2 cents
+
+{Reactions}
+👀 (5) 🔥 (2) 🥲 (5) 💀 (3) 
+
+[09/27/2024 05:28] novamanbg
+https://tenor.com/view/dont-even-think-about-it-victor-sullivan-mark-wahlberg-uncharted-dont-you-dare-gif-25518001
+
+{Embed}
+https://tenor.com/view/dont-even-think-about-it-victor-sullivan-mark-wahlberg-uncharted-dont-you-dare-gif-25518001
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/dont-even-think-about-it-victor-sullivan-E3743.png
+
+
+[09/27/2024 05:33] yoona_yay_80694
+does this mean judging is over? XD
+
+
+[09/27/2024 12:53] novamanbg
+nope
+
+{Reactions}
+😭 
+
+[09/30/2024 07:26] laxmiprasad
+@CloudEllie any progress or atleast a deadline.
+
+
+[09/30/2024 07:27] laxmiprasad
+For god sake Plz don't say that the sponsors are still reviewing it.
+
+{Reactions}
+😂 
+
+[09/30/2024 13:14] thebrittfactor
+Please remember to keep this channel professional y'all. 🙏
+
+
+[09/30/2024 13:14] thebrittfactor
+For an update, we are currently in the judging phase.
+
+
+[10/02/2024 18:06] brivan
+PJQA just started.
+
+{Reactions}
+🎉 (6) 
+
+[10/04/2024 12:16] mylifechangefast.eth_70767
+Wen ending?
+
+
+[10/08/2024 08:14] 0xspearmint
+Can we expect this week?
+
+
+[10/08/2024 08:20] infectedfuture
+don't think so, lots of PJQA'd issues
+
+{Reactions}
+👍 
+
+[10/09/2024 16:39] atmoruku88
+Submitted my audit as well for this project any news on the update?
+
+
+[10/11/2024 01:57] lian0669
+new LoopFi contest is coming 😂 😂
+
+{Reactions}
+😂 (3) 
+
+[10/11/2024 03:47] konfushon
+bro 😭
+they can't keep doing this
+
+
+[10/11/2024 07:13] 0xsorrynotsorry
+Nooo, it's already in the loop
+
+{Reactions}
+😂 (9) 
+
+[10/11/2024 10:52] slavcheww
+https://tenor.com/view/sonic-hedgehog-loop-infinity-boring-gif-10389127133795954112
+
+{Embed}
+https://tenor.com/view/sonic-hedgehog-loop-infinity-boring-gif-10389127133795954112
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/sonic-hedgehog-C4806.png
+
+
+[10/11/2024 16:52] atmoruku88
+I don't get it please I'm nee to all of this what happened to the audits we submitted?
+
+
+[10/11/2024 16:54] cloudellie
+Judging is still underway for this audit. Once it’s finalized, the results will be posted in this channel.
+
+
+[10/11/2024 17:33] laxmiprasad
+Any time frame when its gonna be done or any deadline..... ?
+
+
+[10/12/2024 16:12] chaduke3730
+it took a bit longer
+
+
+[10/12/2024 18:59] mylifechangefast.eth_70767
+https://tenor.com/view/starving-alien-gif-8486978018382819697
+
+{Embed}
+https://tenor.com/view/starving-alien-gif-8486978018382819697
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/starving-alien-A1578.png
+
+{Reactions}
+😂 (2) 
+
+[10/15/2024 07:05] 0xsorrynotsorry
+hey @BoraichoDrukenMaster ,
+Deleted your post as it's against the contest rules
+
+{Reactions}
+thankyou 
+
+[10/15/2024 07:45] boraichodrunkenmaster
+Oh sorry was not aware😬
+
+{Reactions}
+hi5 (2) 
+
+[10/16/2024 19:13] laxmiprasad
+@Abdessamed it would be so great if you atleast can provide any update on this protocol
+
+
+[10/16/2024 19:38] atmoruku88
+Lol it really would
+
+
+[10/16/2024 19:38] atmoruku88
+Not sure if you are meant to tag people though @0xMax1mus
+
+
+[10/16/2024 19:41] laxmiprasad
+@KlustDev chill bro ......... nothing is going as per rules.....
+
+{Reactions}
+👍 
+
+[10/18/2024 09:16] kirobrejka_80610
+@CloudEllie  it has been 16 days since pjqa started and I heard that issues are being resolved at a very concerning rate. Could you please tells us if there is a problem with the judging?
+
+
+[10/18/2024 09:20] cloudellie
+Judging is nearly complete. There are a couple of issues with nuanced details that the judge is reviewing with the sponsor.
+
+
+[10/18/2024 09:22] infectedfuture
+I can tell you why: sponsors disapeared for 1 month, then came back and confirmed dozens, and dozens of findings without verifying if they are valid
+It turns out a lot of them were in fact invalid, and now judges have to clean up the mess
+high five to the judge who is doing a tremendous work rn 🙌
+
+{Reactions}
+➕ (5) 
+
+[10/18/2024 09:23] infectedfuture
+honestly C4 and judges have nothing to do with this mess
+
+
+[10/18/2024 09:35] yoona_yay_80694
+does this mean a lot of the findings in the provisional report are invalid? Or were most of the invalid ones alr cleaned up b4 the provisional report was made?
+
+
+[10/18/2024 09:41] cloudellie
+Provisional report is a snapshot in time. You'll need to wait for judging to be finalized for a clear yes/no on this question.
+
+{Reactions}
+👍 (3) 
+
+[10/18/2024 14:58] 0x0shephard
+Where can we find the provisional report?
+
+
+[10/18/2024 15:24] cloudellie
+It's linked under "previous audits" in the readme for the audit that's currently underway: https://github.com/code-423n4/2024-10-loopfi?tab=readme-ov-file#links
+
+{Reactions}
+👍 
+
+[10/19/2024 17:28] atmoruku88
+Just for clarification.... if my auditbisnt in this document does it mean it was unsatisfactory?
+
+
+[10/19/2024 17:34] yoona_yay_80694
+the audits in the document are just the primary ones, yours could be tagged as a duplicate to any finding in the document (which you will have to wait till results come out to confirm)
+
+{Reactions}
+👆 👍 
+
+[10/21/2024 21:07] kirobrejka_80610
+6 days without a word from the judge on  pjqa @CloudEllie
+
+{Reactions}
+thisisfine (2) 
+
+[10/22/2024 12:14] thebrittfactor
+There are a couple issues being reviewed before final decisions are made. We appreciate everyones patience. 🙏
+
+{Reactions}
+🫡 (5) 🙏 (4) 
+
+[10/27/2024 19:29] theweb3mechanic
+https://tenor.com/view/hungry-starving-feedme-gif-8391839290707720765
+
+{Embed}
+https://tenor.com/view/hungry-starving-feedme-gif-8391839290707720765
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/hungry-starving-2A5D5.png
+
+
+[10/28/2024 05:56] konfushon
+was this contest paid out?
+
+{Reactions}
+4739_Skeletor (2) 
+
+[10/28/2024 10:40] ililhunterlili
+really interested to read the textBook(audit report) of this
+
+
+[10/28/2024 17:52] mylifechangefast.eth_70767
+Sure you didn't participate
+
+{Reactions}
+👍 
+
+[10/28/2024 18:28] atmoruku88
+So if my exploit repo on gitgub is public that's an instant disqualification right?
+
+{Reactions}
+✍️ 
+
+[10/29/2024 09:26] mylifechangefast.eth_70767
+https://tenor.com/view/push-loop-infinite-gif-26761476
+
+{Embed}
+https://tenor.com/view/push-loop-infinite-gif-26761476
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/push-loop-infinite-87D5C.png
+
+{Reactions}
+😆 (6) 
+
+[10/29/2024 15:32] cjigsaw
+👀👀
+
+
+[11/03/2024 19:32] afriauditor
+This is getting to 3 months this contest was completed I understand its alot of finding and all but really not fair on participants for the result to be stretched out for this long. I have no Idea why the delay is this long and honestly my hopes are not high on this one, just feel doing a thing and waiting three months to get results kinda not cool
+
+{Reactions}
+👍 (11) 💯 (13) 👆 (8) hi5 
+
+[11/06/2024 16:22] thebrittfactor
+🤑 🎉  Awards for **LoopFi**:
+
+$17,219.33 USDC » @pkqs90 
+$16,509.75 USDC » @novamanbg 
+$7,423.35 USDC » @evokid 
+$6,992.84 USDC » @Bauchibred 
+$4,064.64 USDC » 0xAlix2 (@a_kalout and @ali_shehab) 
+$4,006.82 USDC » @hash 
+$3,060.22 USDC » @rscodes 
+$2,579.52 USDC » @lian886 
+$2,494.26 USDC » @nnez 
+$1,627.78 USDC » @0xpiken 
+$1,550.81 USDC » @Rhaydden 
+$1,514.14 USDC » @crypticdefense 
+$1,493.93 USDC » @Agontuk 
+$1,347.09 USDC » @testjjjj 
+$1,299.35 USDC » @0x40saoirse 
+$1,265.93 USDC » @Kaysoft 
+$1,200.80 USDC » @0xbepresent 
+$962.39 USDC » @mrMorningstar 
+$942.52 USDC » @Spearmint 
+$807.59 USDC » @afriauditor 
+$804.12 USDC » @monrel 
+$749.83 USDC » @0xSecurity 
+$538.54 USDC » @trtrth 
+$392.39 USDC » @lanrebayode77 
+$389.86 USDC » NexusAudits (@cheatc0d3 and @zanna) 
+$340.29 USDC » @0x41653 
+$287.21 USDC » @4B 
+$254.64 USDC » @Bigsam 
+$242.50 USDC » @Chinmay 
+$233.21 USDC » @chaduke 
+$226.15 USDC » @0xhacksmithh 
+$222.98 USDC » Centaur (@EFCC 419🕵🏽, Aristos and @TheWeb3Mechanic) 
+$220.95 USDC » @Sparrow 
+$220.89 USDC » @zzebra83 
+$140.88 USDC » @lightoasis 
+$140.82 USDC » @mike 
+$140.82 USDC » @Jigsaw 
+$132.43 USDC » @infect3d 
+$97.21 USDC » @karsar 
+$87.29 USDC » @0xBugSlayer 
+$72.19 USDC » @zhaojie 
+$70.87 USDC » EPSec (@0x539.eth | ChainDefenders and @petarP1998) 
+$70.87 USDC » @... 
+$67.83 USDC » @Trooper 
+$67.83 USDC » @VAD37 
+$67.83 USDC » @seaona.
+
+{Reactions}
+🔥 (8) 
+
+[11/06/2024 16:23] thebrittfactor
+$56.02 USDC » @web3km 
+$44.18 USDC » @joaovwfreire 
+$35.69 USDC » @Nyx 
+$27.84 USDC » @grearlake 
+$26.40 USDC » @Ruhum 
+$19.88 USDC » @BoraichoDrukenMaster 
+$16.47 USDC » @sheep 
+$16.47 USDC » @pks_ 
+$16.42 USDC » @anirruth 
+$16.42 USDC » @emerald7017 
+$16.42 USDC » @petarP1998 
+$16.42 USDC » @thisvishalsingh 
+$7.92 USDC » @13u9 
+$7.92 USDC » @gumgumzum 
+$3.52 USDC » @peanuts 
+$3.52 USDC » @yashar 
+$2.15 USDC » @josephxander 
+$2.09 USDC » @ElCid 
+$2.09 USDC » @inspecktor 
+$2.09 USDC » @JanuaryPersimmon2024 
+$2.09 USDC » @ak1 
+$2.09 USDC » @ustas 
+$2.09 USDC » @zxriptor 
+$1.43 USDC » @0xAadi 
+$1.43 USDC » @emmac002 
+$1.37 USDC » @0xMax1mus 
+$1.37 USDC » @Breeje 
+$1.37 USDC » @eeyore 
+$1.37 USDC » @Walter 
+$1.37 USDC » @asui
+
+
+[11/06/2024 16:23] thebrittfactor
+$0.06 USDC » @h0lk0() 
+$0.06 USDC » @0xjoaovpsantos 
+$0.06 USDC » @0xspryon 
+$0.06 USDC » @BiasedMerc 
+$0.06 USDC » @Damola0x 
+$0.06 USDC » @Sungyu 
+$0.06 USDC » @atoko 
+$0.06 USDC » @Jolah1 
+$0.06 USDC » unRekt (@tdey and @gululu) 
+$0.06 USDC » @y0ng0p3 
+
+🏁 Findings summary
+--------------------------------------
+15 High risk findings
+39 Med risk findings
+150 wardens contributed
+
+Top Hunter: novamanbg
+Top Gatherer: pkqs90
+Top QA report: Bauchibred
+
+Awards will be distributed on Polygon within the next week. Congratulations all!  💸 💸 💸
+
+⚠️ Awardees, be sure to review [this announcement](https://discord.com/channels/810916927919620096/810929015509483554/1272625452909072415) and fill in your tax info if you haven't already. This must be completed within 30 days (i.e. before Friday, 06 December 2024 16:30) to receive your award distribution for this audit.
+
+*Note: If you participated in this audit and don’t see your name on this list, please wait until the report is published and the findings repo is made public to check on your submissions.*
+
+{Reactions}
+😅 (3) 
+
+[11/06/2024 16:38] 4gontuk
+
+
+{Attachments}
+Code4rena - ARCHIVE-PUBLIC - loop-jul25 [1235706013252849767].txt_Files/image0-191F4.gif
+
+{Reactions}
+🤣 (3) 🎉 (4) 
+
+[11/06/2024 17:06] haxatron1
+@pkqs90 always winning everything! Congrats :sherlockblob:
+
+{Reactions}
+❤️ (7) 
+
+[11/06/2024 17:17] evokid
+Congrats everyone 🫡
+
+{Reactions}
+👍 (5) 
+
+[11/06/2024 17:30] 0x41653
+If the reward distribution is completed, do we receive notification?
+
+
+[11/07/2024 00:30] lian0669
+Congrats！
+
+
+[11/11/2024 13:22] boraichodrunkenmaster
+@kartoonjoy | C4🎇🎇
+
+
+[11/11/2024 13:30] kartoonjoy
+The announcement will also be made in the #📢・c4-updates channels similar to the winners were announced. Please be sure that your tax reporting info has been provided. https://discord.com/channels/810916927919620096/810929015509483554/1272625452909072415
+
+
+[11/11/2024 16:20] boraichodrunkenmaster
+Thanks
+
+
+[11/15/2024 23:43] itsmetechjay
+ℹ️ This channel is pending archive.   As a result, any private threads will be permanently deleted on 12/07/2024 03:53. Please make sure to grab anything you might need before then.
+
+
+[11/16/2024 13:07] 4gontuk
+wen payout?
+
+
+[11/16/2024 13:09] novamanbg
+It said in the message within this week so probably today or tomorrow
+
+{Reactions}
+👍 (3) 
+
+[11/20/2024 11:00] mylifechangefast.eth_70767
+Wen report and payout?
+
+
+[11/20/2024 13:14] olanre_waju
+paid!
+
+{Reactions}
+👀 (2) 
+
+[11/20/2024 21:28] 4b69
+have you received payout?
+
+
+[11/20/2024 22:14] mylifechangefast.eth_70767
+Nope
+
+
+[11/20/2024 22:15] mylifechangefast.eth_70767
+Be like mine hang:4739_Skeletor:
+
+
+[11/20/2024 23:47] 4b69
+have you filled the tax form?
+
+
+[11/21/2024 08:50] mylifechangefast.eth_70767
+Yup
+
+
+[11/26/2024 10:31] 4b69
+Hey bro,
+Haven't received my reward yet, filled my tax form after the results came i.e a little bit late. I want to find out if there's something extra I have to do that I haven't done yet 
+
+Thanks
+
+
+[11/26/2024 10:35] kartoonjoy
+Hi. You'll want to follow this announcement for guidance on timing.
+
+https://discord.com/channels/810916927919620096/810929015509483554/1308910563807723671
+
+
+[11/26/2024 10:37] 4b69
+Oh okay means I have to wait 30days + 1week. Am I right?
+
+
+[12/05/2024 23:08] itsmetechjay
+ℹ️ Reminder: this channel will be deleted after 24 hours.
+
+
+[12/06/2024 09:54] 4b69
+Please have the second batch of rewards been released?
+
+
+==============================================================
+Exported 310 message(s)
+==============================================================
